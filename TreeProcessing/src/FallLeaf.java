@@ -8,16 +8,17 @@ public class FallLeaf extends Leaf{
 	PApplet parent;
 
 	int icolor;// = (int)parent.random(0,6);
-
+	float angle;
 	int [] rFall = {255,174,216,212,163,237};
 	int [] gFall = {104,112,48,133,42,0};
 	int [] bFall = {4,10,0,28,42,0};
 
-	FallLeaf(PApplet p, PVector l,int icol){
+	FallLeaf(PApplet p, PVector l,int icol,float ang){
 		super("fall",l);
 		parent = p;
 		loc = l;
 		icolor = icol;
+		angle = ang;
 
 	}
 	public void fallAnim(int h){
@@ -57,8 +58,11 @@ public class FallLeaf extends Leaf{
 		/*parent.triangle(loc.x-1,loc.y,
 				loc.x+1,loc.y,
 				loc.x,loc.y-1);*/
-		float length = 2;
+		float length = icolor;
+		parent.pushMatrix();
 		parent.rect(loc.x+length/2,loc.y,length,length);
+		parent.translate(loc.x-length/2,loc.y);
+		parent.rotate(angle);
 
 		/*parent.triangle(loc.x-1,loc.y-8,
 						loc.x-1.5f,loc.y-6,
@@ -69,40 +73,24 @@ public class FallLeaf extends Leaf{
 		parent.triangle(loc.x+9.5f,loc.y-5,
 						loc.x+8.5f,loc.y-3.5f,
 						loc.x+8,loc.y-4);*/
-		parent.pushMatrix();
-		parent.translate(loc.x-length/2,loc.y);
+
 		parent.triangle(0,0,
 						length,0,
-						length/2,-3*length);
-		parent.popMatrix();
-		
-		parent.pushMatrix();
-		parent.translate(loc.x-length/2,loc.y);
+						length/2,-0.4f*length);//-3
 		parent.triangle(0.5f,0,
 						0,-0.5f,
-						-length*0.8f,-length*0.55f);
-		parent.popMatrix();
-		
-		parent.pushMatrix();
-		parent.translate(loc.x-length/2,loc.y);
+						-length,-length*0.35f);//*0.55f);
 		parent.triangle(0.5f,0,
 						0,-0.5f,
-						length*0.8f,-length*0.55f);
-		parent.popMatrix();
-		
-		parent.pushMatrix();
-		parent.translate(loc.x+length/2,loc.y);
+						length,-length*0.35f);//*0.55f);
 		parent.triangle(0,0,
 						0,length,
-						-1.5f*length,length/2);
-		parent.popMatrix();
-		
-		parent.pushMatrix();
-		parent.translate(loc.x+length/2,loc.y);
+						-0.35f*length,length*0.2f);
 		parent.triangle(0,0,
 						0,length,
-						1.5f*length,length/2);
+						0.35f*length,length*0.2f);
 		parent.popMatrix();
+
 		/*parent.triangle(loc.x+6.5f,loc.y,
 						loc.x,loc.y+0.5f,
 						loc.x+4,loc.y-0.5f);*/

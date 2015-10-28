@@ -48,7 +48,7 @@ public class SketchApp extends PApplet{
 				newleaf = new SummerLeaf(this,b.end,(int)random(0,6)); 
 			}
 			else if(key == 'e'){ //fall
-				newleaf = new FallLeaf(this,b.end,(int)random(0,6)); 
+				newleaf = new FallLeaf(this,b.end,(int)random(0,6),random(0,2*PI)); 
 			}
 			else if(key == 'r'){ //christmas decoration
 				newleaf = new PsycheLeaf(this,b.end); 
@@ -87,8 +87,9 @@ public class SketchApp extends PApplet{
 					tree.add(b.branch((int)random(-60,0)));   // Add one going left
 				} 
 				else {
-					Leaf newleaf = new FallLeaf(this,b.end,(int)random(0,6)); 
+					//Leaf newleaf = new FallLeaf(this,b.end,(int)random(0,6),random(0,2*PI)); 
 					//Leaf newleaf = new SummerLeaf(this,b.end,(int)random(0,6)); 
+					Leaf newleaf = new SpringLeaf(this,b.end,(int)random(0,6)); 
 					leaves.add(newleaf);//new Leaf(this,b.end));
 				}
 			}
