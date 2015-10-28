@@ -82,20 +82,7 @@ public class Tree{
 				parent.popMatrix();
 			}
 		}
-		else if (len < 20 && len > 10){
-			color(false);
-			for (int i=0;i<1;i++){
-				parent.pushMatrix();
-				parent.rotate(theta);
-				branch(len);
-				parent.popMatrix();
 
-				parent.pushMatrix();
-				parent.rotate(-theta);
-				branch(len);
-				parent.popMatrix();
-			}
-		}
 		else if (len < 10 && len > 2){
 			color(true);
 			for (int i=0;i<1;i++){
