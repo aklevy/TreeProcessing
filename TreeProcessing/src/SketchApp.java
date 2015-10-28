@@ -41,13 +41,16 @@ public class SketchApp extends PApplet{
 		for (int i = tree.size()-1; i >= 1024/2; i--) {
 			Branch b = tree.get(i);
 			
-			if(key == 's'){ //summer
+			if(key == 'a'){ //spring
+				newleaf = new SpringLeaf(this,b.end,(int)random(0,6)); 
+			}
+			else if(key == 'z'){ //summer
 				newleaf = new SummerLeaf(this,b.end,(int)random(0,6)); 
 			}
-			else if(key == 'f'){ //fall
+			else if(key == 'e'){ //fall
 				newleaf = new FallLeaf(this,b.end,(int)random(0,6)); 
 			}
-			else if(key == 'p'){ //psyche
+			else if(key == 'r'){ //christmas decoration
 				newleaf = new PsycheLeaf(this,b.end); 
 			}
 			else{
@@ -56,7 +59,7 @@ public class SketchApp extends PApplet{
 			leaves.add(newleaf);
 
 		}
-		if(key == 'w'){ //Winter
+		if(key == 't'){ //Winter
 			/*for (Leaf leaf : leaves) {
 				if (leaf instanceof FallLeaf){
 					leaf.fallAnim(height);
@@ -69,7 +72,8 @@ public class SketchApp extends PApplet{
 
 	public void draw(){
 		background(255);
-
+		/*Leaf fleaf = new FallLeaf(this,new PVector((float)width/2,(float)height/2),(int)random(0,6)); 
+		fleaf.display();*/
 		for (int i = tree.size()-1; i >= 0; i--) {
 			// Get the branch, update and draw it
 			Branch b = tree.get(i);
@@ -83,8 +87,8 @@ public class SketchApp extends PApplet{
 					tree.add(b.branch((int)random(-60,0)));   // Add one going left
 				} 
 				else {
-					//Leaf newleaf = new FallLeaf(this,b.end,(int)random(0,6)); 
-					Leaf newleaf = new SummerLeaf(this,b.end,(int)random(0,6)); 
+					Leaf newleaf = new FallLeaf(this,b.end,(int)random(0,6)); 
+					//Leaf newleaf = new SummerLeaf(this,b.end,(int)random(0,6)); 
 					leaves.add(newleaf);//new Leaf(this,b.end));
 				}
 			}

@@ -2,18 +2,18 @@ import processing.core.PApplet;
 import processing.core.PVector;
 
 
-public class SummerLeaf extends Leaf{
+public class SpringLeaf extends Leaf{
 	PApplet parent;
 	PVector loc;
 	int [] rgb = new int[3];
 	int icolor,fruit;
 
-	int [] rSummer = {34,27,9,86,22,127};
-	int [] gSummer = {120,79,106,130,184,221};
-	int [] bSummer = {15,8,9,3,78,76};
+	int [] rSpring = {34,27,9,86,22,127};
+	int [] gSpring = {120,79,106,130,184,221};
+	int [] bSpring = {15,8,9,3,78,76};
 
-	SummerLeaf(PApplet p, PVector l,int icol){
-		super("summer",l);
+	SpringLeaf(PApplet p, PVector l,int icol){
+		super("spring",l);
 		parent = p;
 		loc = l;
 		icolor = icol;
@@ -28,9 +28,9 @@ public class SummerLeaf extends Leaf{
 	
 	
 	public void color(){
-			rgb[0] = rSummer[icolor];
-			rgb[1] = gSummer[icolor];
-			rgb[2] = bSummer[icolor];
+			rgb[0] = rSpring[icolor];
+			rgb[1] = gSpring[icolor];
+			rgb[2] = bSpring[icolor];
 		
 		parent.stroke(rgb[0],rgb[1],rgb[2]);
 		/*for(int i=0;i<3;i++){
@@ -38,7 +38,7 @@ public class SummerLeaf extends Leaf{
 		}*/
 	}
 	public void fruit(){
-		parent.stroke(icolor*255/6,rgb[1],rgb[2]);
+		parent.stroke(255,(int)parent.random(80,150),(int)parent.random(130,190));
 		parent.ellipse(loc.x,loc.y,2,2);
 	}
 	public void fallAnim(int h){
@@ -48,12 +48,12 @@ public class SummerLeaf extends Leaf{
 		//	parent.fill(50,100);
 		parent.strokeWeight(icolor*0.7f);
 
-		if(fruit < 3){
+		if(fruit < 5){
 			color();
 			parent.pushMatrix();
 			parent.translate(loc.x,loc.y);
 			parent.rotate(parent.PI/(float)(icolor+1));
-			parent.rect(0,0, icolor*10, icolor*10, 4);
+			parent.rect(0,0, 2, 2, 4);
 			parent.popMatrix();
 			
 		}
