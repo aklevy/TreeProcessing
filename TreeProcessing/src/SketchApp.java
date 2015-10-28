@@ -1,40 +1,64 @@
 import processing.core.*;
+import java.util.ArrayList;
 
 public class SketchApp extends PApplet{
-	Tree t;
+	ArrayList<Branch> tree;
+	ArrayList<Leaf> leaves;
+
 	int width = 840;
 	int height = 600;
-	PVector p =new PVector(420,500);
+
 	public void setup(){
-	//	size(840,600);
+		//	size(840,600);
 		background(255);
-		t = new Tree(this,100f);
 
-		frameRate(30);
-
+		//	frameRate(30);
+		tree = new ArrayList<Branch>();
+		leaves = new ArrayList<Leaf>();
+		
+			// A branch has a starting location, a starting "velocity", and a starting "timer" 
+			Branch b = new Branch(this,new PVector(width/2,height),new PVector(0,-1),100);
+			// Add to arraylist
+			tree.add(b);
 
 	}
 	public void settings() {
-	    	  size(840, 600);
+		size(840, 600);
 	}
 	public void draw(){
-	    //noLoop();
+		background(255);
+		if(mousePressed == true){
+			// A branch has a starting location, a starting "velocity", and a starting "timer" 
+		//	Branch b = new Branch(this,new PVector(width/2,height),new PVector(0,-1),100);
+			// Add to arraylist
+		//	tree.add(b);
+		}
+		if(keyPressed && (key == 'r')){
+			//  t.reload();
+		}
+		for (int i = tree.size()-1; i >= 0; i--) {
+			// Get the branch, update and draw it
+			Branch b = tree.get(i);
+			b.update();
+			b.render();
+			// If it's ready to split
+			if (b.timeToBranch()) {
+				if (tree.size() < 1024) {
+					//tree.remove(i);             // Delete it
+					tree.add(b.branch( 30));   // Add one going right
+					tree.add(b.branch(-25));   // Add one going left
+				} 
+				else {
+					leaves.add(new Leaf(this,b.end,0));
+				}
+			}
+		}
 
-	      background(255);
-	     // line(mouseX,mouseY,width/2,height/2);
-	     // translate(840/2,600/2);
-	      if(mousePressed == true){
-	        // translate(840/2-mouseX,600/2-mouseY);
-	         t.setRoot(mouseX,mouseY);
-	      }
-	      if(keyPressed && (key == 'r')){
-	        t.reload();
-	      }
-	          //    print(t.info());
-	      t.display();
-	     }
-   
-    
+			for (Leaf leaf : leaves) {
+				leaf.display(); 
+			}
+		}
+	    
     public static void main(String args[]) {
         PApplet.main(new String[] { "--present", "SketchApp" });
       }
