@@ -7,41 +7,35 @@ public abstract class Leaf {
 	PApplet parent;
 	String type;
 	PVector loc;
-	int imageNb = 30;
-
+	PVector [] vertex; 
+	boolean fruit = false;
+	Leaf nextLeaf;
+	
 	Leaf(PApplet p,String t,PVector l) {
 		parent = p;
 		type = t;
 		loc = l.copy();
-	}
-
-	public abstract void color(); // Chooses the color
-	
-
-	public abstract void display(); // Displays the right form
-	
-	public abstract void fallAnim(int h);
-
-	public void morphing(){
 		
 	}
 	
-	public Leaf changeSeason(PVector l){
-		if (type.equals("spring")){ //change to summer
-			return new SummerLeaf(parent,l,(int)parent.random(0,6));
-		}
-		else if (type.equals("summer")){ //change to fall
-			return new FallLeaf(parent,l,(int)parent.random(0,6),parent.random(0,2*parent.PI));
-		}
-		else if (type.equals("fall")){ //change to christmas
-			return new PsycheLeaf(parent,l);
-		}
-		else if (type.equals("psychedelic")){ //change to christmas
-			return new SpringLeaf(parent,l,(int)parent.random(0,6));
-		}
-		return this;
+	public abstract void color(); // Chooses the color
+
+	public abstract PVector getVertex(int index);
+
+	public abstract void display(); // Displays the right form
+
+	public abstract void fallAnim(int h);
+
+	public  boolean isFruit(){
+		return fruit;
 	}
+	public abstract boolean morphing(int k);
+
+	public abstract Leaf nextL();
+	
+	public abstract void changeSeason();
+	
 	public String toString(){
-		return type + " leaf ";
+		return type + " leaf at ("+loc.x+","+loc.y+")";
 	}
 }

@@ -6,46 +6,52 @@ import java.util.ArrayList;
 public class SketchApp extends PApplet{
 	ArrayList<Branch> tree;
 	ArrayList<Leaf> leaves;
+	boolean morphed= false;
 	boolean grow = false;
 	int width = 840;
 	int height = 600;
 	float time;
+	int kFrame = 0;
 
 	public void setup(){
 		//	size(840,600);
 		background(255);
 
-		//	frameRate(30);
+		frameRate(30);
 		tree = new ArrayList<Branch>();
 		leaves = new ArrayList<Leaf>();
 		time = System.nanoTime() * pow(10,-9) ;
-		// A branch has a starting location, a starting "velocity", and a starting "timer" 
-		//Branch b = new Branch(this,new PVector(width/2,height),new PVector(0,-1),100);
-		// Add to arraylist
-		//tree.add(b);
 
 	}
 	public void settings() {
 		size(840, 600);
-	}
-	public void season(){
-		Leaf newleaf;
-		// Changes season 
-		if((System.nanoTime() * pow(10,-9)-time)>=5 ){ 
-			Leaf oldLeaf = leaves.get(0);
-			leaves.clear();
 
-			for (int i = tree.size()-1; i >= 1024/2; i--) {
+	}
+	public void season(int kFrame){
+
+
+		// Changes season 
+		//	if((System.nanoTime() * pow(10,-9)-time)>=5 ){ 
+		//leaves.clear();
+
+		if(!morphed){
+			for (int i = tree.size()-1; i > 512; i--) {
 				Branch b = tree.get(i);
-				newleaf = oldLeaf.changeSeason(b.end);
-				
-				leaves.add(newleaf);
+				for (Leaf leaf : leaves) {
+					morphed = leaf.morphing(kFrame);
+				}
 			}
-			// Resets timer
-			time = System.nanoTime() * pow(10,-9);
 		}
+
+
+			// Resets timer
+			//time = System.nanoTime() * pow(10,-9);
+		
 	}
 	public void mouseClicked(MouseEvent event){
+		background(255);
+
+
 		// Removes previous tree
 		tree.clear();
 		leaves.clear();
@@ -65,7 +71,7 @@ public class SketchApp extends PApplet{
 				newleaf = new SpringLeaf(this,b.end,(int)random(0,6)); 
 			}
 			else if(key == 'z'){ //summer
-				newleaf = new SummerLeaf(this,b.end,(int)random(0,6)); 
+				newleaf = new SummerLeaf(this,b.end,(int)random(0,6),(int)random(0,10)%2); 
 			}
 			else if(key == 'e'){ //fall
 				newleaf = new FallLeaf(this,b.end,(int)random(0,6),random(0,2*PI)); 
@@ -74,7 +80,7 @@ public class SketchApp extends PApplet{
 				newleaf = new PsycheLeaf(this,b.end); 
 			}
 			else{
-				newleaf = new SummerLeaf(this,b.end,(int)random(0,6)); 
+				newleaf = new SummerLeaf(this,b.end,(int)random(0,6),(int)random(0,10)%2); 
 			}
 			leaves.add(newleaf);
 
@@ -93,6 +99,13 @@ public class SketchApp extends PApplet{
 	public void draw(){
 
 		background(255);
+
+
+		//
+		//System.out.println(grow);
+		//old.display();
+		//leaves.add(newL);
+
 		/*Leaf fleaf = new FallLeaf(this,new PVector((float)width/2,(float)height/2),(int)random(0,6)); 
 		fleaf.display();*/
 		for (int i = tree.size()-1; i >= 0; i--) {
@@ -111,6 +124,7 @@ public class SketchApp extends PApplet{
 					//Leaf newleaf = new FallLeaf(this,b.end,(int)random(0,6),random(0,2*PI)); 
 					//Leaf newleaf = new SummerLeaf(this,b.end,(int)random(0,6)); 
 					Leaf newleaf = new SpringLeaf(this,b.end,(int)random(0,6)); 
+					newleaf.changeSeason();
 					leaves.add(newleaf);//new Leaf(this,b.end));
 					grow = true;
 					time = System.nanoTime() * pow(10,-9);
@@ -122,8 +136,30 @@ public class SketchApp extends PApplet{
 			//System.out.println(leaf.toString());
 			leaf.display(); 
 		}
+		
 		if(grow){
-			season();
+			//System.out.println(leaves.size());
+
+			season(kFrame);
+			kFrame++;
+		}
+		//System.out.println(kFrame);
+		if(kFrame >= 15){
+
+			ArrayList<Leaf> newLeaves = new ArrayList<Leaf>();
+			for (Leaf leaf : leaves) {
+				/*leaves.set(leaves.indexOf(leaf), leaf.nextL());
+				leaf.display();
+				//System.out.println(leaf.toString());*/
+				newLeaves.add(leaf.nextL());
+			}
+			leaves.clear();
+		//	System.out.println("ahgnan");
+		//	System.out.println();
+			for (Leaf newLeaf : newLeaves) {
+				//System.out.println(newLeaf.toString());
+				leaves.add(newLeaf);
+			}
 		}
 
 	}
