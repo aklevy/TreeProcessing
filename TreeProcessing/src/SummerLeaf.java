@@ -8,15 +8,21 @@ public class SummerLeaf extends Leaf{
 	int [] rgb = new int[3];
 	int icolor,fruit;
 
+	// Leaf and fruit color
 	int [] rSummer = {34,27,9,86,22,127};
 	int [] gSummer = {120,79,106,130,184,221};
 	int [] bSummer = {15,8,9,3,78,76};
 
+	// Vertex
+	/*PVector [] vertex = {new PVector(0,0), 
+						new PVector(10,10)};
+	*/
 	SummerLeaf(PApplet p, PVector l,int icol){
-		super("summer",l);
+		super(p,"summer",l);
 		parent = p;
 		loc = l;
 		icolor = icol;
+		//vertex[2] = vertex[2].mult(icolor);
 		
 		for(int i=0;i<3;i++){
 			rgb[i]=0;
@@ -53,7 +59,7 @@ public class SummerLeaf extends Leaf{
 			parent.pushMatrix();
 			parent.translate(loc.x,loc.y);
 			parent.rotate(parent.PI/(float)(icolor+1));
-			parent.rect(0,0, icolor*10, icolor*10, 4);
+			parent.rect(0,0,icolor*10,icolor*10, 4);
 			parent.popMatrix();
 			
 		}

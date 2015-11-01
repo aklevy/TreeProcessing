@@ -3,10 +3,13 @@ import processing.core.PVector;
 
 public class PsycheLeaf extends Leaf{
 	PApplet parent;
-
+	PVector [] vertex = {new PVector(loc.x-1,loc.y),
+						new PVector(loc.x+1,loc.y),
+						new PVector(loc.x,loc.y+1)
+						};
 
 	PsycheLeaf(PApplet p, PVector l){
-		super("psychedelic",l);
+		super(p,"psychedelic",l);
 		parent = p;
 		loc = l;
 	}
@@ -26,9 +29,9 @@ public class PsycheLeaf extends Leaf{
 
 		this.color();
 		//	parent.fill(50,100);
-		parent.triangle(loc.x-1,loc.y,
-				loc.x+1,loc.y,
-				loc.x,loc.y+1);
+		parent.triangle(vertex[0].x,vertex[0].y,
+						vertex[1].x,vertex[1].y,
+						vertex[2].x,vertex[2].y);
 		//parent.ellipse(loc.x,loc.y,2,2);   
 	}
 

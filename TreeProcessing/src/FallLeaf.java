@@ -14,7 +14,7 @@ public class FallLeaf extends Leaf{
 	int [] bFall = {4,10,0,28,42,0};
 
 	FallLeaf(PApplet p, PVector l,int icol,float ang){
-		super("fall",l);
+		super(p,"fall",l);
 		parent = p;
 		loc = l;
 		icolor = icol;

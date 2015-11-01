@@ -13,7 +13,7 @@ public class SpringLeaf extends Leaf{
 	int [] bSpring = {15,8,9,3,78,76};
 
 	SpringLeaf(PApplet p, PVector l,int icol){
-		super("spring",l);
+		super(p,"spring",l);
 		parent = p;
 		loc = l;
 		icolor = icol;
