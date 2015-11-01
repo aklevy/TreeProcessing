@@ -69,11 +69,11 @@ Leaf nextLeaf;
 	}
 
 	public Leaf nextL(){
-		return new PsycheLeaf(parent,loc);
+		return new PsycheLeaf(parent,loc,(int)parent.random(0,6));
 	}
 	public void changeSeason(){
 		//change to christmas
-			nextLeaf = new PsycheLeaf(parent,loc);
+			nextLeaf = new PsycheLeaf(parent,loc,(int)parent.random(0,6));
 	}
 	
 	public void display() {

@@ -77,7 +77,7 @@ public class SketchApp extends PApplet{
 				newleaf = new FallLeaf(this,b.end,(int)random(0,6),random(0,2*PI)); 
 			}
 			else if(key == 'r'){ //christmas decoration
-				newleaf = new PsycheLeaf(this,b.end); 
+				newleaf = new PsycheLeaf(this,b.end,(int)random(0,6)); 
 			}
 			else{
 				newleaf = new SummerLeaf(this,b.end,(int)random(0,6),(int)random(0,10)%2); 
@@ -144,22 +144,22 @@ public class SketchApp extends PApplet{
 			kFrame++;
 		}
 		//System.out.println(kFrame);
-		if(kFrame >= 15){
+		if(kFrame >= 7){
 
 			ArrayList<Leaf> newLeaves = new ArrayList<Leaf>();
+			
 			for (Leaf leaf : leaves) {
-				/*leaves.set(leaves.indexOf(leaf), leaf.nextL());
-				leaf.display();
-				//System.out.println(leaf.toString());*/
-				newLeaves.add(leaf.nextL());
+				Leaf leafAdd = leaf.nextL();
+				leafAdd.changeSeason();
+				newLeaves.add(leafAdd);
 			}
 			leaves.clear();
-		//	System.out.println("ahgnan");
-		//	System.out.println();
+		
 			for (Leaf newLeaf : newLeaves) {
-				//System.out.println(newLeaf.toString());
 				leaves.add(newLeaf);
 			}
+			kFrame=0;
+			morphed = false;
 		}
 
 	}
