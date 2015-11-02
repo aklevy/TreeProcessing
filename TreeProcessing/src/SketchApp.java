@@ -122,9 +122,10 @@ public class SketchApp extends PApplet{
 				} 
 				else {
 					//Leaf newleaf = new FallLeaf(this,b.end,(int)random(0,6),random(0,2*PI)); 
-					//Leaf newleaf = new SummerLeaf(this,b.end,(int)random(0,6)); 
-					Leaf newleaf = new SpringLeaf(this,b.end,(int)random(0,6)); 
+					Leaf newleaf = new SummerLeaf(this,b.end,(int)random(0,6),(int)random(0,2)); 
+					//Leaf newleaf = new SpringLeaf(this,b.end,(int)random(0,6)); 
 					newleaf.changeSeason();
+
 					leaves.add(newleaf);//new Leaf(this,b.end));
 					grow = true;
 					time = System.nanoTime() * pow(10,-9);
