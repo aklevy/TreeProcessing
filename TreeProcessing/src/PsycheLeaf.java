@@ -21,7 +21,7 @@ public class PsycheLeaf extends Leaf{
 	Leaf nextLeaf;
 
 	// Time to morph or not
-	boolean morph;
+	boolean morph = false;
 
 	// vertex
 	PVector [] vertex = {new PVector(-1,0),

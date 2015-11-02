@@ -29,7 +29,7 @@ public class FallLeaf extends Leaf{
 	Leaf nextLeaf;
 	
 	// Time to morph or not
-	boolean morph;
+	boolean morph = false;
 	
 	// Time  and height to make the leaf fall from
 	boolean fall = false;
@@ -68,8 +68,9 @@ public class FallLeaf extends Leaf{
 
 		// initializes color
 		rgb = new Color(rFall[icolor],gFall[icolor],bFall[icolor]);
-		System.out.println(rgb.toString());
 		length = icol;
+		
+		// get shape of the leaf
 		vertex[1].mult(length);
 		vertex[2].mult(length);
 		vertex[5].mult(icolor);
@@ -140,7 +141,6 @@ public class FallLeaf extends Leaf{
 	private void fallAnim(){
 		parent.translate(parent.random(-200,200), fallHeight);
 		fallHeight += parent.random(10,13) + fallHeight/10;
-
 	}
 	
 	/**************************************

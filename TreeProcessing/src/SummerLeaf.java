@@ -20,15 +20,20 @@ public class SummerLeaf extends Leaf{
 	// Next leaf to morph into when changing season
 	Leaf nextLeaf;
 
-	// Time to morph or not
-	boolean morph;
+	// Time to morph or not, to fill morph color or not
+	boolean morph = false;
+	boolean morphColFill = false;
 
 	// Angle for the next leaf (fall leaf)
 	float angle;
 
 	// Length of the leaf
 	float length;
-
+	
+	// Time  and height to make the leaf fall from
+	boolean fall = false;
+	float fallHeight;
+	
 	// Leaf and fruit color
 	public int [] rSummer = {34,27,9,86,22,127};
 	public int [] gSummer = {120,79,106,130,184,221};
@@ -59,7 +64,7 @@ public class SummerLeaf extends Leaf{
 		super(p,"summer",l);
 		parent = p;
 		loc = l;
-		
+
 		// initializes color
 		rgb = new Color(rSummer[icolor],gSummer[icolor],bSummer[icolor]); 
 
@@ -67,6 +72,7 @@ public class SummerLeaf extends Leaf{
 		angle = parent.random(0,2*PConstants.PI);
 		length = icolor;
 
+		fallHeight = 10;
 
 		fruit = false;
 
@@ -104,25 +110,35 @@ public class SummerLeaf extends Leaf{
 	public void changeSeason(){
 		//change to Fall
 		nextLeaf = new FallLeaf(parent,loc,icolor,angle);
-		System.out.println(nextLeaf.toString());
-
 	}
+	private void fallAnim(){ //for fruits
+		parent.translate(0, fallHeight);
+		fallHeight += parent.random(5,8) + fallHeight/20;
+	}
+	
 	public void colorMorphing(){
-		float step=100f;
+		float step=35f;
 		Color rgb_end = nextLeaf.getRgb();
 		float hsb_start[] = new float[3];
 		float hsb_end[] = new float[3];
 
 		Color.RGBtoHSB(rgb.getRed(),rgb.getGreen(),rgb.getBlue(),hsb_start);
 		//	System.out.println(nextLeaf.toString());
-		/*Color.RGBtoHSB(rgb_end.getRed(),rgb_end.getGreen(),rgb_end.getBlue(),hsb_end);
+		Color.RGBtoHSB(rgb_end.getRed(),rgb_end.getGreen(),rgb_end.getBlue(),hsb_end);
 
 		// Change the hue to make a color gradient
-		hsb_start[0] += Math.abs(hsb_end[0]-hsb_start[0])/step;
-		 */
+		hsb_start[0] += (hsb_end[0]-hsb_start[0])/step;
+		hsb_start[1] += (hsb_end[1]-hsb_start[1])/step;
+		hsb_start[2] += (hsb_end[2]-hsb_start[2])/step;
+
+		rgb = new Color(Color.HSBtoRGB(hsb_start[0],hsb_start[1],hsb_start[2]));
+
+		parent.strokeWeight(icolor*vertex[0].x/10f);//0.4f);
 		parent.stroke(rgb.getRed(),rgb.getGreen(),rgb.getBlue());
-
-
+		parent.fill(255);
+		if(morphColFill){
+			parent.fill(rgb.getRed(),rgb.getGreen(),rgb.getBlue());
+		}
 	}
 
 	public boolean morphing(int k){
@@ -143,12 +159,20 @@ public class SummerLeaf extends Leaf{
 			vertex[1].y = (float)(1- k/max)*vertex[1].y 
 					+ (float)k/max*(length)*2;
 
-			if(k>=max/10){
-				morph = true;
+			if(k>=max/40){
+				fall = true; // fruits fall
+			}
+			if(k>=max/4){
+				morph = true; // leaf morphing
 				for (int i=0;i<10;i++){
-					vertex_fall[i].x = (float)k/max*nextLeaf.getVertex(i).x*length;
-					vertex_fall[i].y = (float)k/max*nextLeaf.getVertex(i).y*length;
+					vertex_fall[i].x = (float)k/(max/2)*nextLeaf.getVertex(i).x*(length/4);
+					vertex_fall[i].y = (float)k/(max/2)*nextLeaf.getVertex(i).y*(length/4);
 				}
+			}
+
+			// fill color
+			if(k>=max/2){
+				morphColFill = true;
 			}
 		}
 		return false;
@@ -167,6 +191,7 @@ public class SummerLeaf extends Leaf{
 	public void display() {
 		//parent.noStroke();
 		//	parent.fill(50,100);
+		//parent.strokeWeight(icolor*vertex[0].x/10f);
 		parent.strokeWeight(icolor*0.7f);
 		if(!morph){
 			if(!fruit ){
@@ -174,14 +199,21 @@ public class SummerLeaf extends Leaf{
 				parent.fill(255);
 				parent.pushMatrix();
 				parent.translate(loc.x,loc.y);
-				parent.rotate(parent.PI/(float)(icolor+1));
+				parent.rotate(PConstants.PI/(float)(icolor+1));
 				parent.rect(vertex[0].x,vertex[0].y,
 						vertex[1].x,vertex[1].y, 4);
 				parent.popMatrix();
 
 			}
 			else{
+				parent.pushMatrix();
+
+				if (fall){
+					fallAnim();
+				}
 				displayFruit(6f);
+				parent.popMatrix();
+
 				/*parent.triangle(loc.x-0.7f,loc.y,
 				loc.x+0.7f,loc.y,
 				loc.x,loc.y+0.7f);*/
@@ -191,15 +223,20 @@ public class SummerLeaf extends Leaf{
 			/*parent.stroke((int)parent.random(230,255),
 					(int)parent.random(80,110),
 					(int)parent.random(0,15));*/
-			parent.fill(255);
+			//parent.fill(255);
 			colorMorphing();
 			/*parent.fill((int)parent.random(230,255),
 					(int)parent.random(80,110),
 					(int)parent.random(0,15));*/
 			parent.pushMatrix();
 			parent.translate(loc.x, loc.y);
+			parent.rotate(PConstants.PI/(float)(icolor+1));
 			parent.rect(vertex[0].x,vertex[0].y,
 					vertex[1].x,vertex[1].y);
+			parent.popMatrix();
+			
+			parent.pushMatrix();
+			parent.translate(loc.x, loc.y);
 			parent.translate(vertex[0].x,vertex[0].y);
 			parent.rotate(angle);
 

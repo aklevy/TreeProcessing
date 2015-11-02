@@ -22,7 +22,7 @@ public class SpringLeaf extends Leaf{
 	Leaf nextLeaf;
 
 	// Time to morph or not
-	boolean morph;
+	boolean morph = false;
 
 	// Color for leaves
 	public int [] rSpring = {34,27,9,86,22,127};
@@ -78,9 +78,7 @@ public class SpringLeaf extends Leaf{
 
 	public void changeSeason(){
 		//change to summer
-
 		nextLeaf =  new SummerLeaf(parent,loc,icolor,this.isFruit() ? 1 : 0);
-
 	}
 
 	public boolean morphing(int k){
