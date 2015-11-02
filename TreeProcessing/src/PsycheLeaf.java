@@ -41,8 +41,8 @@ public class PsycheLeaf extends Leaf{
 	}
 	public boolean morphing(int k){
 		morph = true;
-		float max = 80;
-		if(k>=80){
+		float max = 100f;
+		if(k>=max){
 			return true;
 		}
 

@@ -24,7 +24,6 @@ public abstract class Leaf {
 
 	public abstract void display(); // Displays the right form
 
-	public abstract void fallAnim(int h);
 
 	public  boolean isFruit(){
 		return fruit;

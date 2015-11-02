@@ -63,7 +63,7 @@ public class SpringLeaf extends Leaf{
 	}
 	public boolean morphing(int k){
 		//System.out.println(k);
-		float max = 80f;
+		float max = 100f;
 		if(k>=max){
 			return true;
 		}

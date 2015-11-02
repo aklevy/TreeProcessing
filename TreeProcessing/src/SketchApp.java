@@ -146,8 +146,7 @@ public class SketchApp extends PApplet{
 			kFrame++;
 		}
 		//System.out.println(kFrame);
-		if(kFrame >= 80){
-
+		if(kFrame >= 100){
 			ArrayList<Leaf> newLeaves = new ArrayList<Leaf>();
 
 			for (Leaf leaf : leaves) {
@@ -160,8 +159,10 @@ public class SketchApp extends PApplet{
 			for (Leaf newLeaf : newLeaves) {
 				leaves.add(newLeaf);
 			}
+			
 			kFrame=0;
 			morphed = false;
+			
 		}
 
 	}
