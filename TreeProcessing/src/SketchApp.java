@@ -44,9 +44,9 @@ public class SketchApp extends PApplet{
 		}
 
 
-			// Resets timer
-			//time = System.nanoTime() * pow(10,-9);
-		
+		// Resets timer
+		//time = System.nanoTime() * pow(10,-9);
+
 	}
 	public void mouseClicked(MouseEvent event){
 		background(255);
@@ -136,25 +136,27 @@ public class SketchApp extends PApplet{
 			//System.out.println(leaf.toString());
 			leaf.display(); 
 		}
-		
-		if(grow){
-			//System.out.println(leaves.size());
 
-			season(kFrame);
+		if(grow && !morphed){
+			//System.out.println(leaves.size());
+			for (Leaf leaf : leaves) {
+				morphed = leaf.morphing(kFrame);
+			}
+			
 			kFrame++;
 		}
 		//System.out.println(kFrame);
-		if(kFrame >= 7){
+		if(kFrame >= 80){
 
 			ArrayList<Leaf> newLeaves = new ArrayList<Leaf>();
-			
+
 			for (Leaf leaf : leaves) {
 				Leaf leafAdd = leaf.nextL();
 				leafAdd.changeSeason();
 				newLeaves.add(leafAdd);
 			}
 			leaves.clear();
-		
+
 			for (Leaf newLeaf : newLeaves) {
 				leaves.add(newLeaf);
 			}

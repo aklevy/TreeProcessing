@@ -4,7 +4,7 @@ import processing.core.PVector;
 public class PsycheLeaf extends Leaf{
 	PApplet parent;
 	Leaf nextLeaf;
-	boolean square;
+	boolean morph;
 	int icolor;
 	// vertex
 	PVector [] vertex = {new PVector(-1,0),
@@ -40,8 +40,9 @@ public class PsycheLeaf extends Leaf{
 		parent.popMatrix();
 	}
 	public boolean morphing(int k){
-		square = true;
-		if(k>=70){
+		morph = true;
+		float max = 80;
+		if(k>=80){
 			return true;
 		}
 
@@ -55,10 +56,10 @@ public class PsycheLeaf extends Leaf{
 		}
 		else { 
 			for (int i=0;i<2;i++){
-				vertex[i].x = (float)(1- k/500f)*vertex[i].x 
-							+ (float)k/500f*nextLeaf.getVertex(i).x;
-				vertex[i].y = (float)(1- k/500f)*vertex[i].y 
-							+ (float)k/500f*nextLeaf.getVertex(i).y;
+				vertex[i].x = (float)(1- k/max)*vertex[i].x 
+							+ (float)k/max*nextLeaf.getVertex(i).x;
+				vertex[i].y = (float)(1- k/max)*vertex[i].y 
+							+ (float)k/max*nextLeaf.getVertex(i).y;
 			}
 		}
 		return false;
@@ -79,7 +80,7 @@ public class PsycheLeaf extends Leaf{
 
 		this.color();
 		//	parent.fill(50,100);
-		if(!square){
+		if(!morph){
 			parent.pushMatrix();
 			parent.translate(loc.x,loc.y);
 			parent.rotate(parent.PI/(float)(icolor+1));

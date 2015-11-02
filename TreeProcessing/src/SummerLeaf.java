@@ -7,7 +7,7 @@ public class SummerLeaf extends Leaf{
 	PVector loc;
 	int [] rgb = new int[3];
 	int icolor;
-Leaf nextLeaf;
+	Leaf nextLeaf;
 	// Leaf and fruit color
 	int [] rSummer = {34,27,9,86,22,127};
 	int [] gSummer = {120,79,106,130,184,221};
@@ -15,8 +15,8 @@ Leaf nextLeaf;
 
 	// Vertex
 	PVector [] vertex = {new PVector(0,0), 
-						new PVector(5,5)};
-	
+			new PVector(5,5)};
+
 	SummerLeaf(PApplet p, PVector l,int icol,int f){
 		super(p,"summer",l);
 		parent = p;
@@ -31,15 +31,15 @@ Leaf nextLeaf;
 		if(f == 1){
 			fruit = true;
 		} 
-		
+
 	}
-	
-	
+
+
 	public void color(){
-			rgb[0] = rSummer[icolor];
-			rgb[1] = gSummer[icolor];
-			rgb[2] = bSummer[icolor];
-		
+		rgb[0] = rSummer[icolor];
+		rgb[1] = gSummer[icolor];
+		rgb[2] = bSummer[icolor];
+
 		parent.stroke(rgb[0],rgb[1],rgb[2]);
 		/*for(int i=0;i<3;i++){
 			rgb[i] = ;	
@@ -50,25 +50,29 @@ Leaf nextLeaf;
 		parent.stroke(icolor*10+190+50,icolor*10+10,0);
 		parent.ellipse(loc.x,loc.y,size,size);
 	}
-	
+
 	public PVector getVertex(int index){
 		return vertex[index];
 	}
-	
+
 	public void fallAnim(int h){
 	}
-	
+
 	public boolean morphing(int k){
-		return true;
+		float max = 80f;
+		if(k>=max){
+			return true;
+		}
+		return false;
 	}
 	public Leaf nextL(){
 		return new FallLeaf(parent,loc,icolor,parent.random(0,2*parent.PI));
 	}
 	public void changeSeason(){
 		//change to Fall
-			nextLeaf = new FallLeaf(parent,loc,(int)parent.random(0,6),parent.random(0,2*parent.PI));
+		nextLeaf = new FallLeaf(parent,loc,(int)parent.random(0,6),parent.random(0,2*parent.PI));
 	}
-	
+
 	public void display() {
 		//parent.noStroke();
 		//	parent.fill(50,100);
@@ -81,9 +85,9 @@ Leaf nextLeaf;
 			parent.translate(loc.x,loc.y);
 			parent.rotate(parent.PI/(float)(icolor+1));
 			parent.rect(vertex[0].x,vertex[0].y,
-						vertex[1].x,vertex[1].y, 4);
+					vertex[1].x,vertex[1].y, 4);
 			parent.popMatrix();
-			
+
 		}
 		else{
 			displayFruit(6f);

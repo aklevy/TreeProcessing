@@ -63,24 +63,27 @@ public class SpringLeaf extends Leaf{
 	}
 	public boolean morphing(int k){
 		//System.out.println(k);
-		if(k>=70){
+		float max = 80f;
+		if(k>=max){
 			return true;
 		}
 
 		if(nextLeaf.isFruit()){
 			fruit = true;
+			if(k>=30){
 			//color pink->red
-			/*parent.stroke((k*6/10000f)*10+190,(k*6/10000f)*10+190,0);
-			parent.fill((k*6/10000f)*10+190,(k*6/10000f)*10+190,0);*/
+			parent.stroke((k*6/max)*10+190,(k*6/max)*10+190,0);
+			parent.fill((k*6/max)*10+190,(k*6/max)*10+190,0);
+			}
 			displayFruit((2-k/500f)*3);
 			return false;
 		}
 		else { 
 			for (int i=0;i<2;i++){
-				vertex[i].x = (float)(1- k/500f)*vertex[i].x 
-							+ (float)k/500f*nextLeaf.getVertex(i).x;
-				vertex[i].y = (float)(1- k/500f)*vertex[i].y 
-							+ (float)k/500f*nextLeaf.getVertex(i).y;
+				vertex[i].x = (float)(1- k/max)*vertex[i].x 
+							+ (float)k/max*nextLeaf.getVertex(i).x;
+				vertex[i].y = (float)(1- k/max)*vertex[i].y 
+							+ (float)k/max*nextLeaf.getVertex(i).y;
 			}
 		}
 		return false;
