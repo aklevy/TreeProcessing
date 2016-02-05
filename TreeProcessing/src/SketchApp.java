@@ -12,6 +12,7 @@ public class SketchApp extends PApplet{
 	int height = 600;
 	float time;
 	int kFrame = 0;
+	//Leaf l;
 
 	public void setup(){
 		//	size(840,600);
@@ -20,13 +21,17 @@ public class SketchApp extends PApplet{
 		frameRate(30);
 		tree = new ArrayList<Branch>();
 		leaves = new ArrayList<Leaf>();
-		time = System.nanoTime() * pow(10,-9) ;
+		/*l = new SummerLeaf(this,new PVector(width/2,height/2),(int)random(0,6),2); //leaf
+		l.changeSeason();
+		System.out.println(l.toString());
+		System.out.println(l.nextL().toString());
+		*/time = System.nanoTime() * pow(10,-9) ;
 
 	}
 	public void settings() {
 		size(840, 600);
 
-	}
+	}/*
 	public void season(int kFrame){
 
 
@@ -47,9 +52,12 @@ public class SketchApp extends PApplet{
 		// Resets timer
 		//time = System.nanoTime() * pow(10,-9);
 
-	}
+	}*/
 	public void mouseClicked(MouseEvent event){
 		background(255);
+
+		//Leaf newleaf = new SpringLeaf(this,b.end,(int)random(0,6)); 
+		
 
 
 		// Removes previous tree
@@ -60,8 +68,7 @@ public class SketchApp extends PApplet{
 		tree.add(b);
 
 	}
-
-	public void keyPressed(){
+/*public void keyPressed(){
 		leaves.clear();
 		Leaf newleaf;
 		for (int i = tree.size()-1; i >= 1024/2; i--) {
@@ -86,28 +93,22 @@ public class SketchApp extends PApplet{
 
 		}
 		if(key == 't'){ //Winter
-			/*for (Leaf leaf : leaves) {
-				if (leaf instanceof FallLeaf){
-					leaf.fallAnim(height);
-
-				}
-			}*/
 			leaves.clear();
 		}
-	}
+	}*/
 
 	public void draw(){
-
 		background(255);
+	/*	l.display();
+		l.morphing(kFrame);
+		kFrame++;
+		if(kFrame > 300){
+			l = l.nextL();
+			l.changeSeason();
+			kFrame = 0;
+		}*/
 
 
-		//
-		//System.out.println(grow);
-		//old.display();
-		//leaves.add(newL);
-
-		/*Leaf fleaf = new FallLeaf(this,new PVector((float)width/2,(float)height/2),(int)random(0,6)); 
-		fleaf.display();*/
 		for (int i = tree.size()-1; i >= 0; i--) {
 			// Get the branch, update and draw it
 			Branch b = tree.get(i);
@@ -122,7 +123,7 @@ public class SketchApp extends PApplet{
 				} 
 				else {
 					//Leaf newleaf = new FallLeaf(this,b.end,(int)random(0,6),random(0,2*PI)); 
-					Leaf newleaf = new SummerLeaf(this,b.end,(int)random(0,6),(int)random(0,2)); 
+					Leaf newleaf = new SummerLeaf(this,b.end,(int)random(0,6),(int)random(0,2),(float)random(0,2*PConstants.PI)); 
 					//Leaf newleaf = new SpringLeaf(this,b.end,(int)random(0,6)); 
 					newleaf.changeSeason();
 
@@ -133,11 +134,13 @@ public class SketchApp extends PApplet{
 			}
 		}
 
+		// Display each leaf
 		for (Leaf leaf : leaves) {
 			//System.out.println(leaf.toString());
 			leaf.display(); 
 		}
 
+		// Applying morphing to leaves
 		if(grow && !morphed){
 			//System.out.println(leaves.size());
 			for (Leaf leaf : leaves) {
@@ -146,19 +149,13 @@ public class SketchApp extends PApplet{
 			
 			kFrame++;
 		}
-		//System.out.println(kFrame);
-		if(kFrame >= 100){
-			ArrayList<Leaf> newLeaves = new ArrayList<Leaf>();
-
-			for (Leaf leaf : leaves) {
-				Leaf leafAdd = leaf.nextL();
+		
+		// End of morphing, replacing by new leaves
+		if(kFrame > 300){
+			for (int i = 0;i<leaves.size();i++){
+				Leaf leafAdd = leaves.get(i).nextL();
 				leafAdd.changeSeason();
-				newLeaves.add(leafAdd);
-			}
-			leaves.clear();
-
-			for (Leaf newLeaf : newLeaves) {
-				leaves.add(newLeaf);
+				leaves.set(i,leafAdd);		
 			}
 			
 			kFrame=0;

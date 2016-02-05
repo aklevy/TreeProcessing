@@ -73,17 +73,17 @@ public class SpringLeaf extends Leaf{
 	 */
 
 	public Leaf nextL(){
-		return new SummerLeaf(parent,loc,icolor,this.isFruit() ? 1 : 0);
+		return nextLeaf;//return new SummerLeaf(parent,loc,icolor,this.isFruit() ? 1 : 0);
 	}
 
 	public void changeSeason(){
 		//change to summer
-		nextLeaf =  new SummerLeaf(parent,loc,icolor,this.isFruit() ? 1 : 0);
+		nextLeaf =  new SummerLeaf(parent,loc,icolor,this.isFruit() ? 1 : 0,parent.random(0,2*PConstants.PI));
 	}
 
 	public boolean morphing(int k){
 		//System.out.println(k);
-		float max = 100f;
+		float max = 300f;
 		if(k>=max){
 			return true;
 		}

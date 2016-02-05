@@ -62,7 +62,7 @@ public class PsycheLeaf extends Leaf{
 	 */
 
 	public Leaf nextL(){
-		return new SpringLeaf(parent,loc,icolor);
+		return nextLeaf;//return new SpringLeaf(parent,loc,icolor);
 	}
 
 	public void changeSeason(){
@@ -72,7 +72,7 @@ public class PsycheLeaf extends Leaf{
 
 	public boolean morphing(int k){
 		morph = true;
-		float max = 100f;
+		float max = 300f;
 		if(k>=max){
 			return true;
 		}
@@ -82,7 +82,7 @@ public class PsycheLeaf extends Leaf{
 			//color pink->red
 			/*parent.stroke((k*6/10000f)*10+190,(k*6/10000f)*10+190,0);
 			parent.fill((k*6/10000f)*10+190,(k*6/10000f)*10+190,0);*/
-			displayFruit((k/10f));
+			displayFruit(k/20f);
 			return false;
 		}
 		else { 

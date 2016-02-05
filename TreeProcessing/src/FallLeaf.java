@@ -9,31 +9,28 @@ import java.awt.Color;
 public class FallLeaf extends Leaf{
 	// Processing applet containing method draw and setup
 	PApplet parent;
-	
+
 	// Branch end to be fixed to 
 	PVector loc;
-	
+
 	// Leaf color
 	Color rgb;
-	
+
 	// Random to choose color
 	int icolor;
-	
-	// Angle for the leaf to grow
-	float angle;
-	
-	// Length of the leaf
-	float length;
-	
+
+	// Angle for the leaf to grow, length and weight of this leaf
+	float angle, length, weight;
+
 	// Next leaf to morph into when changing season
 	Leaf nextLeaf;
-	
+
 	// Time to morph or not
 	boolean morph = false;
-	
+
 	// Time  and height to make the leaf fall from
 	boolean fall = false;
-	float fallHeight;
+	float fallHeight = 10;
 
 	// Color for leaves
 	public int [] rFall = {255,174,216,212,163,237};
@@ -41,20 +38,8 @@ public class FallLeaf extends Leaf{
 	public int [] bFall = {4,10,0,28,42,0};
 
 	// Vertex 
-	PVector[] vertex= {
-			new PVector(0,0), //0
-			new PVector(1,0), //1
-			new PVector(1/2,-0.35f), //2
+	PVector[] vertex;
 
-			new PVector(0.5f,0), //3
-			new PVector(0,-0.5f), //4
-			new PVector(0,1), //5
-			new PVector(-1,-1*0.35f), //6
-			new PVector(1,-1*0.35f), //7
-			new PVector(-0.35f,0.2f), //8
-			new PVector(0.35f,0.2f) //9
-	};
-	
 	/**************************************
 	 * * CONSTRUCTOR
 	 */
@@ -64,29 +49,44 @@ public class FallLeaf extends Leaf{
 		loc = l;
 		icolor = icol;
 		angle = ang;
-		fallHeight = 10;
+		weight = icolor*0.4f;
 
 		// initializes color
 		rgb = new Color(rFall[icolor],gFall[icolor],bFall[icolor]);
-		length = icol;
-		
+		length = icol/1.5f;
+
 		// get shape of the leaf
-		vertex[1].mult(length);
-		vertex[2].mult(length);
-		vertex[5].mult(icolor);
-		vertex[6].mult(icolor);
-		vertex[7].mult(icolor);
-		vertex[8].mult(icolor);
-		vertex[9].mult(icolor);
+		vertex = new PVector[]{
+				new PVector(0,0), //0
+				new PVector(1,0), //1
+				new PVector(1/2,-0.35f), //2
+
+				new PVector(0.5f,0), //3
+				new PVector(0,-0.5f), //4
+				new PVector(0,1), //5
+				new PVector(-1,-1*0.35f), //6
+				new PVector(1,-1*0.35f), //7
+				new PVector(-0.35f,0.2f), //8
+				new PVector(0.35f,0.2f) //9
+		};
+		for (int i = 1;i<10;i++){
+			vertex[i].mult(length);
+		}
+		/*System.out.println("true values : ");
+
+		for (int i=0;i<10;i++){
+			System.out.println("x: "+vertex[i].x+" y: "+vertex[i].y);
+		}*/
 
 	}
+	
 	/**************************************
 	 * * COLOR METHOD
 	 */
 	public  Color getRgb (){
 		return rgb;
 	}
-	
+
 	public void color(){
 		parent.stroke(rgb.getRed(),rgb.getGreen(),rgb.getBlue());
 		//parent.fill(255);
@@ -94,26 +94,42 @@ public class FallLeaf extends Leaf{
 
 
 	public PVector getVertex(int index){
+		//System.out.println("return "+vertex[index].x);
 		return vertex[index];
+		//.mult(length);
 	}
 	/**************************************
 	 * * MORPHING
 	 */
 	public Leaf nextL(){
-		return new PsycheLeaf(parent,loc,(int)parent.random(0,6));
+		return nextLeaf;//return new PsycheLeaf(parent,loc,(int)parent.random(0,6));
 	}
 	public void changeSeason(){
 		//change to christmas
 		nextLeaf = new PsycheLeaf(parent,loc,(int)parent.random(0,6));
 	}
+
+
 	public boolean morphing(int k){
 
-		float max = 100f;
-		if(k>=max){
+		float max = 300f;
+		/*if(k == 0){				
+			System.out.println("final ");
+			for (int i=0;i<10;i++){
+				System.out.println(vertex[i].x);
+		}
+		}*/
+		if(k>max){
 			return true;
 		}
+		else {
+			/*if(k==0){
+				System.out.println("true values : ");
 
-		else { 
+				for (int i=0;i<10;i++){
+					System.out.println("x: "+vertex[i].x+" y: "+vertex[i].y);
+				}
+			}*/
 			for (int i=0;i<3;i++){
 				//System.out.println(vertex[i]);
 				length -= k/10*length/max;
@@ -137,20 +153,20 @@ public class FallLeaf extends Leaf{
 		return false;
 	}
 
-	
+
 	private void fallAnim(){
 		parent.translate(parent.random(-200,200), fallHeight);
 		fallHeight += parent.random(10,13) + fallHeight/10;
 	}
-	
+
 	/**************************************
 	 * * DISPLAY
 	 */
 	public void display() {
 		//parent.noStroke();
-		parent.strokeWeight(5*length/icolor);//icolor*0.7f);
+		parent.strokeWeight(weight);//icolor*0.7f);
 		this.color();
-		parent.fill(255);
+		//parent.fill(255);
 		//	parent.fill(50,100);
 		/*parent.triangle(loc.x-1,loc.y,
 				loc.x+1,loc.y,
