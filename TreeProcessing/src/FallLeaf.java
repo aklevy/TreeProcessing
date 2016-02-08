@@ -27,6 +27,7 @@ public class FallLeaf extends Leaf{
 
 	// Time to morph or not
 	boolean morph = false;
+	boolean noleaf = false;
 
 	// Time  and height to make the leaf fall from
 	boolean fall = false;
@@ -79,7 +80,7 @@ public class FallLeaf extends Leaf{
 		}*/
 
 	}
-	
+
 	/**************************************
 	 * * COLOR METHOD
 	 */
@@ -134,20 +135,27 @@ public class FallLeaf extends Leaf{
 				//System.out.println(vertex[i]);
 				length -= k/10*length/max;
 				vertex[i].x = (float)(1- k/max)*vertex[i].x 
-						+ (float)k/max*nextLeaf.getVertex(i).x;
+						+ (float)(k)/max*nextLeaf.getVertex(i).x;
 				vertex[i].y = (float)(1- k/max)*vertex[i].y 
-						+ (float)k/max*nextLeaf.getVertex(i).y;
-			}
-			if(k>max/5){
-				fall = true;
-				morph= true;
-			}
-			if(k>=max*3/4){
+						+ (float)(k)/max*nextLeaf.getVertex(i).y;
+			}/*
+			if(k>=max*3.2/5){
 				parent.stroke((int)parent.random(0,255),
 						(int)parent.random(0,255),
 						(int)parent.random(0,255));
 				fall = false;
 			}
+			else */if(k>=max*1/3){
+				fall = false;
+				if( parent.random(0,k) >= 220){
+					noleaf = true;
+				}
+			}
+			else if(k>max/5){
+				fall = true;
+				morph= true;
+			}
+
 
 		}
 		return false;
@@ -171,51 +179,20 @@ public class FallLeaf extends Leaf{
 		/*parent.triangle(loc.x-1,loc.y,
 				loc.x+1,loc.y,
 				loc.x,loc.y-1);*/
-		if (!morph){
+		if(noleaf){
 
-			parent.pushMatrix();
-			parent.rect(loc.x+length/2,loc.y,length,length);
-			parent.translate(loc.x-length/2,loc.y);
-			parent.rotate(angle);
-
-			parent.triangle(vertex[0].x,vertex[0].y,
-					vertex[1].x,vertex[1].y,
-					vertex[2].x,vertex[2].y);//-3
-
-			parent.triangle(vertex[3].x,vertex[3].y,
-					vertex[4].x,vertex[4].y,
-					vertex[6].x,vertex[6].y);//*0.55f);
-
-			parent.triangle(vertex[3].x,vertex[3].y,
-					vertex[4].x,vertex[4].y,
-					vertex[7].x,vertex[7].y);//*0.55f);
-
-			parent.triangle(vertex[0].x,vertex[0].y,
-					vertex[5].x,vertex[5].y,
-					vertex[8].x,vertex[8].y);
-
-			parent.triangle(vertex[0].x,vertex[0].y,
-					vertex[5].x,vertex[5].y,
-					vertex[9].x,vertex[9].y);
-			parent.popMatrix();
 		}
-		else{
+		else{ 
+			if (!morph){
 
-			parent.pushMatrix();
-			parent.translate(loc.x,loc.y);
-			parent.rotate(PConstants.PI/(float)(icolor+1));
-
-			parent.triangle(vertex[0].x,vertex[0].y,
-					vertex[1].x,vertex[1].y,
-					vertex[2].x,vertex[2].y);//-3
-			parent.popMatrix();
-
-			parent.pushMatrix();
-			parent.translate(loc.x-length/2,loc.y);
-			if(fall){
-				fallAnim();
-
+				parent.pushMatrix();
+				parent.rect(loc.x+length/2,loc.y,length,length);
+				parent.translate(loc.x-length/2,loc.y);
 				parent.rotate(angle);
+
+				parent.triangle(vertex[0].x,vertex[0].y,
+						vertex[1].x,vertex[1].y,
+						vertex[2].x,vertex[2].y);//-3
 
 				parent.triangle(vertex[3].x,vertex[3].y,
 						vertex[4].x,vertex[4].y,
@@ -232,8 +209,44 @@ public class FallLeaf extends Leaf{
 				parent.triangle(vertex[0].x,vertex[0].y,
 						vertex[5].x,vertex[5].y,
 						vertex[9].x,vertex[9].y);
+				parent.popMatrix();
 			}
-			parent.popMatrix();
+			else{
+
+				parent.pushMatrix();
+				parent.translate(loc.x,loc.y);
+				parent.rotate(PConstants.PI/(float)(icolor+1));
+
+				parent.triangle(vertex[0].x,vertex[0].y,
+						vertex[1].x,vertex[1].y,
+						vertex[2].x,vertex[2].y);//-3
+				parent.popMatrix();
+
+				parent.pushMatrix();
+				parent.translate(loc.x-length/2,loc.y);
+				if(fall){
+					fallAnim();
+
+					parent.rotate(angle);
+
+					parent.triangle(vertex[3].x,vertex[3].y,
+							vertex[4].x,vertex[4].y,
+							vertex[6].x,vertex[6].y);//*0.55f);
+
+					parent.triangle(vertex[3].x,vertex[3].y,
+							vertex[4].x,vertex[4].y,
+							vertex[7].x,vertex[7].y);//*0.55f);
+
+					parent.triangle(vertex[0].x,vertex[0].y,
+							vertex[5].x,vertex[5].y,
+							vertex[8].x,vertex[8].y);
+
+					parent.triangle(vertex[0].x,vertex[0].y,
+							vertex[5].x,vertex[5].y,
+							vertex[9].x,vertex[9].y);
+				}
+				parent.popMatrix();
+			}
 		}
 	}
 

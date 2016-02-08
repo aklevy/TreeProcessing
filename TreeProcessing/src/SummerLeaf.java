@@ -181,7 +181,7 @@ public class SummerLeaf extends Leaf{
 			vertex[1].y = (float)(1- k/max)*vertex[1].y 
 					+ (float)k/max*(length);//*2;
 
-			if(k>=max/4){
+			if(k>=max*3/5){
 				morph = true; // leaf morphing to fall leaf
 				
 				for (int i=0;i<2;i++){
