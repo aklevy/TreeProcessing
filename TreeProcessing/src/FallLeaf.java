@@ -25,6 +25,9 @@ public class FallLeaf extends Leaf{
 	// Next leaf to morph into when changing season
 	Leaf nextLeaf;
 
+	// morphing time
+	float max = 300f;
+	
 	// Time to morph or not
 	boolean morph = false;
 	boolean noleaf = false;
@@ -111,9 +114,9 @@ public class FallLeaf extends Leaf{
 	}
 
 
-	public boolean morphing(int k){
+	public boolean morphing(float k){
+		k *= growth;
 
-		float max = 300f;
 		/*if(k == 0){				
 			System.out.println("final ");
 			for (int i=0;i<10;i++){
@@ -145,7 +148,7 @@ public class FallLeaf extends Leaf{
 						(int)parent.random(0,255));
 				fall = false;
 			}
-			else */if(k>=max*1/3){
+			else */if(k>=max*1/4){
 				fall = false;
 				if( parent.random(0,k) >= 220){
 					noleaf = true;

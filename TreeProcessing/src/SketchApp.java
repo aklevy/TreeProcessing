@@ -1,7 +1,10 @@
-import processing.core.*;
-import processing.event.MouseEvent;
-
 import java.util.ArrayList;
+
+import processing.core.PApplet;
+import processing.core.PConstants;
+import processing.core.PVector;
+import processing.event.MouseEvent;
+import g4p_controls.*;
 
 public class SketchApp extends PApplet{
 	ArrayList<Branch> tree;
@@ -11,7 +14,10 @@ public class SketchApp extends PApplet{
 	int width = 840;
 	int height = 600;
 	float time;
-	int kFrame = 0;
+	float kFrame = 0;
+
+	//GUI
+	GCustomSlider slider;
 	//Leaf l;
 
 	public void setup(){
@@ -25,7 +31,14 @@ public class SketchApp extends PApplet{
 		l.changeSeason();
 		System.out.println(l.toString());
 		System.out.println(l.nextL().toString());
-		*/time = System.nanoTime() * pow(10,-9) ;
+		 */time = System.nanoTime() * pow(10,-9) ;
+		 G4P.registerSketch(this);
+
+		 slider = new GCustomSlider(this, 20, 20, 260, 50, null);
+		 // show          opaque  ticks value limits
+		 slider.setShowDecor(false, true, true, true);
+		 slider.setNbrTicks(10);
+		 slider.setLimits(1, 0, 2);
 
 	}
 	public void settings() {
@@ -57,7 +70,7 @@ public class SketchApp extends PApplet{
 		background(255);
 
 		//Leaf newleaf = new SpringLeaf(this,b.end,(int)random(0,6)); 
-		
+
 
 
 		// Removes previous tree
@@ -68,7 +81,7 @@ public class SketchApp extends PApplet{
 		tree.add(b);
 
 	}
-/*public void keyPressed(){
+	/*public void keyPressed(){
 		leaves.clear();
 		Leaf newleaf;
 		for (int i = tree.size()-1; i >= 1024/2; i--) {
@@ -99,7 +112,8 @@ public class SketchApp extends PApplet{
 
 	public void draw(){
 		background(255);
-	/*	l.display();
+
+		/*	l.display();
 		l.morphing(kFrame);
 		kFrame++;
 		if(kFrame > 300){
@@ -146,10 +160,10 @@ public class SketchApp extends PApplet{
 			for (Leaf leaf : leaves) {
 				morphed = leaf.morphing(kFrame);
 			}
-			
+
 			kFrame++;
 		}
-		
+
 		// End of morphing, replacing by new leaves
 		if(kFrame > 300){
 			for (int i = 0;i<leaves.size();i++){
@@ -157,14 +171,18 @@ public class SketchApp extends PApplet{
 				leafAdd.changeSeason();
 				leaves.set(i,leafAdd);		
 			}
-			
+
 			kFrame=0;
 			morphed = false;
-			
+
 		}
 
 	}
-
+	/*public void handleSliderEvents(GValueControl slider, GEvent event){
+			for (int i = 0;i<leaves.size();i++){
+				leaves.get(i).setGrowingTime(slider.getValueF());
+			}
+	}*/
 	public static void main(String args[]) {
 		PApplet.main(new String[] { "--present", "SketchApp" });
 	}

@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.lang.Math;
+
 import processing.core.PConstants;
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -20,7 +21,10 @@ public class SummerLeaf extends Leaf{
 
 	// Next leaf to morph into when changing season
 	Leaf nextLeaf;
-
+	
+	// morphing time
+	float max = 300f;
+	
 	// Time to morph or not, to fill morph color or not
 	boolean morph = false;
 	boolean morphColFill = false;
@@ -157,9 +161,10 @@ public class SummerLeaf extends Leaf{
 		}
 	}
 
-	public boolean morphing(int k){
-		//colMorph = k;
-		float max = 300f;
+	public boolean morphing(float k){
+
+		k *= growth;
+
 		if(k>max){
 			return true;
 		}
@@ -189,8 +194,8 @@ public class SummerLeaf extends Leaf{
 				}
 				for (int i=2;i<10;i++){
 					//System.out.println((k-max/4)/(3*max/4));//(k-max/4)/(3*max/4)
-					vertex_fall[i].x = (float)(k-max/4)/(3*max/4)*nextLeaf.getVertex(i).x;//*length/2;
-					vertex_fall[i].y = (float)(k-max/4)/(3*max/4)*nextLeaf.getVertex(i).y;//*length/2;
+					vertex_fall[i].x = (float)(k-(max/4))/(3*max/4)*nextLeaf.getVertex(i).x;//*length/2;
+					vertex_fall[i].y = (float)(k-(max/4))/(3*max/4)*nextLeaf.getVertex(i).y;//*length/2;
 
 				}
 			}

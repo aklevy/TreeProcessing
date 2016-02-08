@@ -21,6 +21,10 @@ public class SpringLeaf extends Leaf{
 	// Next leaf to morph into when changing season
 	Leaf nextLeaf;
 
+	float weight;
+	// morphing time
+	float max = 300f;
+	
 	// Time to morph or not
 	boolean morph = false;
 
@@ -42,6 +46,7 @@ public class SpringLeaf extends Leaf{
 		loc = l;
 		icolor = icol;
 		fruit = false;
+		weight = icolor*0.7f;
 
 		// initializes color
 		rgb = new Color(rSpring[icolor],gSpring[icolor],bSpring[icolor]);
@@ -80,10 +85,31 @@ public class SpringLeaf extends Leaf{
 		//change to summer
 		nextLeaf =  new SummerLeaf(parent,loc,icolor,this.isFruit() ? 1 : 0,parent.random(0,2*PConstants.PI));
 	}
+	public void colorMorphing(){
+		float step=35f;
+		Color rgb_end = nextLeaf.getRgb();
+		float hsb_start[] = new float[3];
+		float hsb_end[] = new float[3];
 
-	public boolean morphing(int k){
-		//System.out.println(k);
-		float max = 300f;
+		Color.RGBtoHSB(rgb.getRed(),rgb.getGreen(),rgb.getBlue(),hsb_start);
+		//	System.out.println(nextLeaf.toString());
+		Color.RGBtoHSB(rgb_end.getRed(),rgb_end.getGreen(),rgb_end.getBlue(),hsb_end);
+
+		// Change the hue to make a color gradient
+		hsb_start[0] += (hsb_end[0]-hsb_start[0])/step;
+		hsb_start[1] += (hsb_end[1]-hsb_start[1])/step;
+		hsb_start[2] += (hsb_end[2]-hsb_start[2])/step;
+
+		rgb = new Color(Color.HSBtoRGB(hsb_start[0],hsb_start[1],hsb_start[2]));
+		
+		parent.strokeWeight(weight);
+		parent.stroke(rgb.getRed(),rgb.getGreen(),rgb.getBlue());
+		
+	}
+	public boolean morphing(float k){
+		k *= growth;
+		morph = true;
+		
 		if(k>=max){
 			return true;
 		}
@@ -127,14 +153,17 @@ public class SpringLeaf extends Leaf{
 		//	parent.fill(50,100);
 		parent.strokeWeight(icolor*0.4f);
 
-		if(!fruit){ //leaf
-			color();
+		if(!fruit ){ //leaf
+			if(!morph)
+				color();
+			if(morph)
+				colorMorphing();
 			parent.fill(255);
 			parent.pushMatrix();
 			parent.translate(loc.x,loc.y);
 			parent.rotate(PConstants.PI/(float)(icolor+1));
 			parent.rect(vertex[0].x,vertex[0].y,
-					vertex[1].x,vertex[1].y, 4);
+					vertex[1].x,vertex[1].y);//, 4);
 			parent.popMatrix();
 
 		}

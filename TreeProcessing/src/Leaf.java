@@ -11,7 +11,8 @@ public abstract class Leaf {
 	boolean fruit = false;
 	Leaf nextLeaf;
 	Color rgb;
-
+	float growth = 1f;
+	
 	Leaf(PApplet p,String t,PVector l) {
 		parent = p;
 		type = t;
@@ -29,12 +30,15 @@ public abstract class Leaf {
 	public  boolean isFruit(){
 		return fruit;
 	}
-	public abstract boolean morphing(int k);
+	public abstract boolean morphing(float k);
 
 	public abstract Leaf nextL();
 	
 	public abstract void changeSeason();
 	
+	public void setGrowingTime(float sliderValue){
+		growth = 1.f/sliderValue;
+	}
 	public String toString(){
 		return type + " leaf at ("+loc.x+","+loc.y+") with the color "+getRgb().toString();
 	}

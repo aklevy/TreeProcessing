@@ -23,6 +23,8 @@ public class PsycheLeaf extends Leaf{
 	// Length and weight of the next leaf
 	float weight;
 	
+	float max = 300f;
+	
 	// Time to morph or not
 	boolean morph = false;
 	boolean morphColFill = false;
@@ -96,9 +98,10 @@ public class PsycheLeaf extends Leaf{
 			parent.fill(rgb.getRed(),rgb.getGreen(),rgb.getBlue());
 		}
 	}
-	public boolean morphing(int k){
+	public boolean morphing(float k){
+		k *= growth;
 		morph = true;
-		float max = 300f;
+		
 		if(k>=max){
 			return true;
 		}
@@ -111,7 +114,7 @@ public class PsycheLeaf extends Leaf{
 			//color pink->red
 			/*parent.stroke((k*6/10000f)*10+190,(k*6/10000f)*10+190,0);
 			parent.fill((k*6/10000f)*10+190,(k*6/10000f)*10+190,0);*/
-			displayFruit(k/20f);
+			displayFruit(k/max*2f);
 			return false;
 		}
 		else { 
