@@ -14,13 +14,16 @@ public class SummerLeaf extends Leaf{
 	PVector loc;
 
 	// Leaf color
-	Color rgb;
-
+	Color rgb,fruitrgb;
+	
 	// Random to choose color
 	int icolor;
 
 	// Next leaf to morph into when changing season
 	Leaf nextLeaf;
+	
+	// fruit Size
+	float size;
 	
 	// morphing time
 	float max = 300f;
@@ -71,20 +74,24 @@ public class SummerLeaf extends Leaf{
 		loc = l;
 
 		// initializes color
-		rgb = new Color(rSummer[icolor],gSummer[icolor],bSummer[icolor]); 
-
+		rgb = new Color(rSummer[icolor],gSummer[icolor],bSummer[icolor]);
+		
+		// decides whether it is a fruit or leaf and intializes color
+		if(f == 1){
+			fruit = true;
+			size = 6f;
+			fruitrgb = new Color(icolor*10+190+50,icolor*10+10,0);
+		} 
+		else{
+			fruit = false;
+		}
 		icolor = icol;
 		angle = a;
 		length = icolor;
 		weight = icolor*0.7f;
-				
-		fruit = false;
+			
 
-		// decides whether it is a fruit or leaf
-		if(f == 1){
-			fruit = true;
-		} 
-
+		
 		vertex[1].mult(length);
 
 		// intialize the vertex array for next leaf
@@ -104,8 +111,12 @@ public class SummerLeaf extends Leaf{
 	/**************************************
 	 * * COLOR
 	 */
-	public  Color getRgb (){
-		return rgb;
+	public Color getRgb (){
+		if(fruit){
+			return fruitrgb;
+		}
+		else
+			return rgb;
 	}
 	public void color(){
 		parent.stroke(rgb.getRed(),rgb.getGreen(),rgb.getBlue());
@@ -132,8 +143,8 @@ public class SummerLeaf extends Leaf{
 		nextLeaf = new FallLeaf(parent,loc,icolor,angle);
 	}
 	private void fallAnim(){ //for fruits
-		parent.translate(0, fallHeight);
-		fallHeight += parent.random(5,8) + fallHeight/20;
+		parent.translate(0, (float)(icolor/3)*fallHeight);
+		fallHeight += (parent.random(5,8) + fallHeight/20);
 	}
 
 	public void colorMorphing(){
@@ -162,16 +173,18 @@ public class SummerLeaf extends Leaf{
 	}
 
 	public boolean morphing(float k){
-
 		k *= growth;
 
 		if(k>max){
 			return true;
 		}
 		else { 
-			if(k==max/30){
+			if(k>max/40){
+				if ((int)parent.random(0,100)>65){
 				fall = true; // fruits fall
+				
 				morphColFill = true; //fill leaf
+				}
 			}
 			// Change gradually the stroke weight
 			weight = (float)(1-k/max) *(0.7f*icolor) + (float)k/max*(0.4f*icolor) ;
@@ -217,9 +230,11 @@ public class SummerLeaf extends Leaf{
 	/**************************************
 	 * * DISPLAY
 	 */
-	public void displayFruit(float size){
-		parent.fill(icolor*10+190,icolor*10+10,0);
-		parent.stroke(icolor*10+190+50,icolor*10+10,0);
+	public void displayFruit(){
+		//parent.fill(icolor*10+190,icolor*10+10,0);
+		parent.fill(fruitrgb.getRed(),fruitrgb.getGreen(),fruitrgb.getBlue());
+		parent.stroke(fruitrgb.getRed()+50,fruitrgb.getGreen(),fruitrgb.getBlue());
+		//parent.stroke(icolor*10+190+50,icolor*10+10,0);
 		parent.ellipse(loc.x,loc.y,size,size);
 	}
 
@@ -230,31 +245,36 @@ public class SummerLeaf extends Leaf{
 		if(!morph){
 			parent.strokeWeight(weight);
 			if(!fruit ){
+				parent.pushStyle();
 				color();
-				parent.fill(255);
 				parent.pushMatrix();
+				parent.noFill();
+				//parent.fill(255);
 				parent.translate(loc.x,loc.y);
 				parent.rotate(PConstants.PI/(float)(icolor+1));
 				parent.rect(vertex[0].x,vertex[0].y,
 						vertex[1].x,vertex[1].y);//, 4);
 				parent.popMatrix();
+				parent.popStyle();
 
 			}
 			else{
+				parent.pushStyle();
 				parent.pushMatrix();
 
 				if (fall){
 					fallAnim();
 				}
-				displayFruit(6f);
+				displayFruit();
 				parent.popMatrix();
-
+				parent.popStyle();
 				/*parent.triangle(loc.x-0.7f,loc.y,
 				loc.x+0.7f,loc.y,
 				loc.x,loc.y+0.7f);*/
 			}
 		}
 		else{
+
 			//System.out.println("angle: "+angle);
 			colorMorphing();
 

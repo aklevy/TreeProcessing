@@ -13,7 +13,7 @@ public class SpringLeaf extends Leaf{
 	PVector loc;
 
 	// Leaf color
-	Color rgb;
+	Color rgb,fruitrgb;
 
 	// Random to choose color
 	int icolor;
@@ -21,12 +21,14 @@ public class SpringLeaf extends Leaf{
 	// Next leaf to morph into when changing season
 	Leaf nextLeaf;
 
-	float weight;
+	// fruit size
+	float weight, size;
 	// morphing time
 	float max = 300f;
 	
 	// Time to morph or not
-	boolean morph = false;
+	//boolean morph = false;
+	boolean colorMorph = false;
 
 	// Color for leaves
 	public int [] rSpring = {34,27,9,86,22,127};
@@ -54,7 +56,9 @@ public class SpringLeaf extends Leaf{
 		// decides whether it is a fruit or leaf
 		if(icolor > 4){
 			fruit = true; 
+			fruitrgb = new Color(255,(int)parent.random(80,150),(int)parent.random(130,190));
 		}
+		size = 2f;
 
 	}
 
@@ -83,15 +87,23 @@ public class SpringLeaf extends Leaf{
 
 	public void changeSeason(){
 		//change to summer
-		nextLeaf =  new SummerLeaf(parent,loc,icolor,this.isFruit() ? 1 : 0,parent.random(0,2*PConstants.PI));
+		nextLeaf =  new SummerLeaf(parent,loc,icolor,fruit? 1 : 0,parent.random(0,2*PConstants.PI));
 	}
+
 	public void colorMorphing(){
 		float step=35f;
+		Color rgb_start;
+		if (fruit)
+			rgb_start = fruitrgb;
+		else
+			rgb_start = rgb;
+		
 		Color rgb_end = nextLeaf.getRgb();
-		float hsb_start[] = new float[3];
-		float hsb_end[] = new float[3];
+		
+		float hsb_start[] 	= new float[3];
+		float hsb_end[] 	= new float[3];
 
-		Color.RGBtoHSB(rgb.getRed(),rgb.getGreen(),rgb.getBlue(),hsb_start);
+		Color.RGBtoHSB(rgb_start.getRed(),rgb_start.getGreen(),rgb_start.getBlue(),hsb_start);
 		//	System.out.println(nextLeaf.toString());
 		Color.RGBtoHSB(rgb_end.getRed(),rgb_end.getGreen(),rgb_end.getBlue(),hsb_end);
 
@@ -100,28 +112,36 @@ public class SpringLeaf extends Leaf{
 		hsb_start[1] += (hsb_end[1]-hsb_start[1])/step;
 		hsb_start[2] += (hsb_end[2]-hsb_start[2])/step;
 
-		rgb = new Color(Color.HSBtoRGB(hsb_start[0],hsb_start[1],hsb_start[2]));
+		rgb_start = new Color(Color.HSBtoRGB(hsb_start[0],hsb_start[1],hsb_start[2]));
+		if (fruit)
+			fruitrgb = rgb_start;
+		else
+			rgb = rgb_start;
 		
 		parent.strokeWeight(weight);
-		parent.stroke(rgb.getRed(),rgb.getGreen(),rgb.getBlue());
+		parent.stroke(rgb_start.getRed(),rgb_start.getGreen(),rgb_start.getBlue());
+		parent.fill(rgb_start.getRed(),rgb_start.getGreen(),rgb_start.getBlue());
 		
 	}
 	public boolean morphing(float k){
 		k *= growth;
-		morph = true;
+	//	morph = true;
 		
 		if(k>=max){
 			return true;
 		}
-
-		if(nextLeaf.isFruit()){
-			fruit = true;
-			if(k>=30){
+		if(k>=30){
+			colorMorph = true;
+		}
+		if(fruit){//nextLeaf.isFruit()){
+			//fruit = true;
+			
 				//color pink->red
-				parent.stroke((k*6/max)*10+190,(k*6/max)*10+190,0);
-				parent.fill((k*6/max)*10+190,(k*6/max)*10+190,0);
-			}
-			displayFruit((2-k/500f)*3);
+				//parent.stroke((k*6/max)*10+190,(k*6/max)*10+190,0);
+				//parent.fill((k*6/max)*10+190,(k*6/max)*10+190,0);
+			size = 2f + (float)k/max*(6f-2f);//(2-k/500f)*3;
+			
+			displayFruit();
 			return false;
 		}
 		else { 
@@ -139,11 +159,17 @@ public class SpringLeaf extends Leaf{
 	 * * DISPLAY
 	 */
 
-	public void displayFruit(float size){
+	public void displayFruit(){
 		parent.pushMatrix();
 		parent.translate(loc.x,loc.y);
-		parent.fill(255,(int)parent.random(80,150),(int)parent.random(130,190));
-		parent.stroke(255,(int)parent.random(80,150),(int)parent.random(130,190));
+		if (!colorMorph){
+			parent.fill(255,(int)parent.random(80,150),(int)parent.random(130,190));
+			parent.stroke(255,(int)parent.random(80,150),(int)parent.random(130,190));
+		}
+		else{
+			colorMorphing();
+			}
+		
 		parent.ellipse(0,0,size,size);
 		parent.popMatrix();
 	}
@@ -154,11 +180,12 @@ public class SpringLeaf extends Leaf{
 		parent.strokeWeight(icolor*0.4f);
 
 		if(!fruit ){ //leaf
-			if(!morph)
+			if(!colorMorph)
 				color();
-			if(morph)
+			else
 				colorMorphing();
-			parent.fill(255);
+			//parent.fill(255);
+			parent.noFill();
 			parent.pushMatrix();
 			parent.translate(loc.x,loc.y);
 			parent.rotate(PConstants.PI/(float)(icolor+1));
@@ -168,7 +195,7 @@ public class SpringLeaf extends Leaf{
 
 		}
 		else{
-			displayFruit(2f);
+			displayFruit();
 		}
 		//parent.ellipse(loc.x,loc.y,2,2);   
 	}

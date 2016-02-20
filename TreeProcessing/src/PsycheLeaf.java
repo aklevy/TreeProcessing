@@ -19,12 +19,12 @@ public class PsycheLeaf extends Leaf{
 
 	// Next leaf to morph into when changing season
 	Leaf nextLeaf;
-	
+
 	// Length and weight of the next leaf
 	float weight;
-	
+
 	float max = 300f;
-	
+
 	// Time to morph or not
 	boolean morph = false;
 	boolean morphColFill = false;
@@ -90,25 +90,26 @@ public class PsycheLeaf extends Leaf{
 		hsb_start[2] += (hsb_end[2]-hsb_start[2])/step;
 
 		rgb = new Color(Color.HSBtoRGB(hsb_start[0],hsb_start[1],hsb_start[2]));
-		
+
 		parent.strokeWeight(weight);
 		parent.stroke(rgb.getRed(),rgb.getGreen(),rgb.getBlue());
 		parent.fill(255);
-		if(morphColFill){
-			parent.fill(rgb.getRed(),rgb.getGreen(),rgb.getBlue());
-		}
+		//	if(morphColFill){
+		parent.fill(rgb.getRed(),rgb.getGreen(),rgb.getBlue());
+		//}
 	}
 	public boolean morphing(float k){
 		k *= growth;
-		morph = true;
-		
+		//morph = true;
+
 		if(k>=max){
 			return true;
 		}
-		if(k==max/30){
+		if(k==max/3){
+			morph = true;
 			morphColFill = true; //fill leaf
 		}
-		
+
 		if(nextLeaf.isFruit()){
 			fruit = true;
 			//color pink->red
@@ -118,15 +119,17 @@ public class PsycheLeaf extends Leaf{
 			return false;
 		}
 		else { 
-			// Change gradually the stroke weight
-			weight = (float)(1-k/max) *2 + (float)k/max*(0.4f*icolor) ;
-			colorMorphing();
-			
-			for (int i=0;i<2;i++){
-				vertex[i].x = (float)(1- k/max)*vertex[i].x 
-						+ (float)k/max*nextLeaf.getVertex(i).x;
-				vertex[i].y = (float)(1- k/max)*vertex[i].y 
-						+ (float)k/max*nextLeaf.getVertex(i).y;
+			if (morph){
+				// Change gradually the stroke weight
+				weight = (float)(1-k/max) *2 + (float)k/max*(0.4f*icolor) ;
+				colorMorphing();
+
+				for (int i=0;i<2;i++){
+					vertex[i].x = (float)(1- k/max)*vertex[i].x 
+							+ (float)k/max*nextLeaf.getVertex(i).x;
+					vertex[i].y = (float)(1- k/max)*vertex[i].y 
+							+ (float)k/max*nextLeaf.getVertex(i).y;
+				}
 			}
 		}
 		return false;

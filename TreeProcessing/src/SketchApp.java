@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.util.ArrayList;
 
 import processing.core.PApplet;
@@ -15,14 +16,19 @@ public class SketchApp extends PApplet{
 	int height = 600;
 	float time;
 	float kFrame = 0;
-
+	Color bgColor;
 	//GUI
 	GCustomSlider slider;
 	//Leaf l;
-
+	public int [] r = {157,255,196,116};
+	public int [] g = {255,96,126,166};
+	public int [] b = {108,57,80,188};
+	int season = 0;
+	
 	public void setup(){
 		//	size(840,600);
-		background(255);
+		bgColor = new Color(255);
+		background(bgColor.getRGB());
 
 		frameRate(30);
 		tree = new ArrayList<Branch>();
@@ -39,7 +45,7 @@ public class SketchApp extends PApplet{
 		 slider.setShowDecor(false, true, true, true);
 		 slider.setNbrTicks(10);
 		 slider.setLimits(1, 0, 2);
-
+		 
 	}
 	public void settings() {
 		size(840, 600);
@@ -67,7 +73,7 @@ public class SketchApp extends PApplet{
 
 	}*/
 	public void mouseClicked(MouseEvent event){
-		background(255);
+		background(bgColor.getRGB());
 
 		//Leaf newleaf = new SpringLeaf(this,b.end,(int)random(0,6)); 
 
@@ -111,7 +117,22 @@ public class SketchApp extends PApplet{
 	}*/
 
 	public void draw(){
-		background(255);
+		float step=35f;
+		Color rgb_end = new Color(r[season],g[season],b[season]);
+		float hsb_start[] = new float[3];
+		float hsb_end[] = new float[3];
+
+		Color.RGBtoHSB(bgColor.getRed(),bgColor.getGreen(),bgColor.getBlue(),hsb_start);
+		//	System.out.println(nextLeaf.toString());
+		Color.RGBtoHSB(rgb_end.getRed(),rgb_end.getGreen(),rgb_end.getBlue(),hsb_end);
+
+		// Change the hue to make a color gradient
+		hsb_start[0] += (hsb_end[0]-hsb_start[0])/step;
+		hsb_start[1] += (hsb_end[1]-hsb_start[1])/step;
+		hsb_start[2] += (hsb_end[2]-hsb_start[2])/step;
+
+		bgColor = new Color(Color.HSBtoRGB(hsb_start[0],hsb_start[1],hsb_start[2]));
+		background(bgColor.getRGB());
 
 		/*	l.display();
 		l.morphing(kFrame);
@@ -136,9 +157,26 @@ public class SketchApp extends PApplet{
 					tree.add(b.branch((int)random(-60,0)));   // Add one going left
 				} 
 				else {
+					Leaf newleaf;
+					switch (season){
+					case 0 : 
+						newleaf = new SpringLeaf(this,b.end,(int)random(0,6)); 
+						break;
+					case 1 :
+						newleaf = new SummerLeaf(this,b.end,(int)random(0,6),(int)random(0,2),(float)random(0,2*PConstants.PI)); 
+						break;
+					case 2: 
+						newleaf = new FallLeaf(this,b.end,(int)random(0,6),random(0,2*PI)); 
+						break;
+					case 3:
+						newleaf = new PsycheLeaf(this,b.end,(int)random(0,6));
+						break;
+					default:
+						newleaf = new SpringLeaf(this,b.end,(int)random(0,6)); 
+							break;		
+					}
 					//Leaf newleaf = new FallLeaf(this,b.end,(int)random(0,6),random(0,2*PI)); 
-					Leaf newleaf = new SummerLeaf(this,b.end,(int)random(0,6),(int)random(0,2),(float)random(0,2*PConstants.PI)); 
-					//Leaf newleaf = new SpringLeaf(this,b.end,(int)random(0,6)); 
+					//Leaf newleaf = new SummerLeaf(this,b.end,(int)random(0,6),(int)random(0,2),(float)random(0,2*PConstants.PI)); 
 					newleaf.changeSeason();
 
 					leaves.add(newleaf);//new Leaf(this,b.end));
@@ -174,7 +212,12 @@ public class SketchApp extends PApplet{
 
 			kFrame=0;
 			morphed = false;
-
+			if (season == 3){
+				season  = 0;
+			}
+			else{
+				season ++;
+			}
 		}
 
 	}

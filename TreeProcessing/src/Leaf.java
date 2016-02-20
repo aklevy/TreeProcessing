@@ -20,7 +20,7 @@ public abstract class Leaf {
 		
 	}
 	public abstract Color getRgb ();
-
+	
 	public abstract void color(); // Chooses the color
 
 	public abstract PVector getVertex(int index);
