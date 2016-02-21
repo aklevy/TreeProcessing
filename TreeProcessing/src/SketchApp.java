@@ -23,7 +23,7 @@ public class SketchApp extends PApplet{
 	public int [] r = {157,255,196,116};
 	public int [] g = {255,96,126,166};
 	public int [] b = {108,57,80,188};
-	int season = 0;
+	int season = 2;
 	
 	public void setup(){
 		//	size(840,600);
@@ -117,7 +117,9 @@ public class SketchApp extends PApplet{
 	}*/
 
 	public void draw(){
-		float step=35f;
+		
+		// background color gradient
+		float step=300f;
 		Color rgb_end = new Color(r[season],g[season],b[season]);
 		float hsb_start[] = new float[3];
 		float hsb_end[] = new float[3];

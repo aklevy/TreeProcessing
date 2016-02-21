@@ -30,6 +30,8 @@ public class SpringLeaf extends Leaf{
 	//boolean morph = false;
 	boolean colorMorph = false;
 
+	// leaf transparency
+	float alpha;
 	// Color for leaves
 	public int [] rSpring = {34,27,9,86,22,127};
 	public int [] gSpring = {120,79,106,130,184,221};
@@ -59,7 +61,7 @@ public class SpringLeaf extends Leaf{
 			fruitrgb = new Color(255,(int)parent.random(80,150),(int)parent.random(130,190));
 		}
 		size = 2f;
-
+		alpha = 255f;
 	}
 
 	/**************************************
@@ -70,6 +72,7 @@ public class SpringLeaf extends Leaf{
 		return rgb;
 	}
 	public void color(){
+		parent.fill(rgb.getRed(),rgb.getGreen(),rgb.getBlue(),alpha);
 		parent.stroke(rgb.getRed(),rgb.getGreen(),rgb.getBlue());
 	}
 
@@ -100,19 +103,12 @@ public class SpringLeaf extends Leaf{
 		
 		Color rgb_end = nextLeaf.getRgb();
 		
-		float hsb_start[] 	= new float[3];
-		float hsb_end[] 	= new float[3];
+		int r = (int) (rgb_start.getRed() + (rgb_end.getRed() - rgb_start.getRed())/step);
+		int g = (int) (rgb_start.getGreen() + (rgb_end.getGreen() - rgb_start.getGreen())/step);
+		int b = (int) (rgb_start.getBlue() + (rgb_end.getBlue() - rgb_start.getBlue())/step);
 
-		Color.RGBtoHSB(rgb_start.getRed(),rgb_start.getGreen(),rgb_start.getBlue(),hsb_start);
-		//	System.out.println(nextLeaf.toString());
-		Color.RGBtoHSB(rgb_end.getRed(),rgb_end.getGreen(),rgb_end.getBlue(),hsb_end);
-
-		// Change the hue to make a color gradient
-		hsb_start[0] += (hsb_end[0]-hsb_start[0])/step;
-		hsb_start[1] += (hsb_end[1]-hsb_start[1])/step;
-		hsb_start[2] += (hsb_end[2]-hsb_start[2])/step;
-
-		rgb_start = new Color(Color.HSBtoRGB(hsb_start[0],hsb_start[1],hsb_start[2]));
+		rgb_start = new Color(r,g,b);
+		
 		if (fruit)
 			fruitrgb = rgb_start;
 		else
@@ -120,18 +116,26 @@ public class SpringLeaf extends Leaf{
 		
 		parent.strokeWeight(weight);
 		parent.stroke(rgb_start.getRed(),rgb_start.getGreen(),rgb_start.getBlue());
-		parent.fill(rgb_start.getRed(),rgb_start.getGreen(),rgb_start.getBlue());
-		
+		if (!fruit)
+			parent.fill(rgb_start.getRed(),rgb_start.getGreen(),rgb_start.getBlue(),alpha);
+		else
+			parent.fill(rgb_start.getRed(),rgb_start.getGreen(),rgb_start.getBlue(),alpha);
+
 	}
 	public boolean morphing(float k){
 		k *= growth;
 	//	morph = true;
-		
+
 		if(k>=max){
 			return true;
 		}
 		if(k>=30){
 			colorMorph = true;
+			alpha =  (float)k/(max*2f)*(255) ;
+
+		}
+		else{
+			alpha = 1- (float)k/(max*2f)*(255) ;
 		}
 		if(fruit){//nextLeaf.isFruit()){
 			//fruit = true;
@@ -185,7 +189,7 @@ public class SpringLeaf extends Leaf{
 			else
 				colorMorphing();
 			//parent.fill(255);
-			parent.noFill();
+			//parent.noFill();
 			parent.pushMatrix();
 			parent.translate(loc.x,loc.y);
 			parent.rotate(PConstants.PI/(float)(icolor+1));

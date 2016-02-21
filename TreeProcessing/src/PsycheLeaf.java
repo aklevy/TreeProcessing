@@ -20,14 +20,15 @@ public class PsycheLeaf extends Leaf{
 	// Next leaf to morph into when changing season
 	Leaf nextLeaf;
 
-	// Length and weight of the next leaf
-	float weight;
+	//  weight of the next leaf and size of next flower
+	float weight,size;
 
 	float max = 300f;
 
 	// Time to morph or not
 	boolean morph = false;
 	boolean morphColFill = false;
+	boolean fruit = false;
 	// vertex
 	PVector [] vertex = {new PVector(-1,0),
 			new PVector(1,0),
@@ -39,12 +40,14 @@ public class PsycheLeaf extends Leaf{
 	 */
 	PsycheLeaf(PApplet p, PVector l,int icol){
 		super(p,"psychedelic",l);
-		parent = p;
-		loc = l;
-		icolor = icol;
-
+		parent 	= p;
+		loc 	= l;
+		icolor 	= icol;
+		size 	= 0f;
+		weight 	=0f;
 		// initializes color
-		rgb = new Color((int)parent.random(0,255),(int)parent.random(0,255),(int)parent.random(0,255));
+		//rgb = new Color((int)parent.random(0,255),(int)parent.random(0,255),(int)parent.random(0,255));
+		rgb = new Color(0,(int)parent.random(100,200),0);
 
 	}
 
@@ -73,6 +76,9 @@ public class PsycheLeaf extends Leaf{
 	public void changeSeason(){
 		//change to spring
 		nextLeaf = new SpringLeaf(parent,loc,(int)parent.random(0,6));
+		if(nextLeaf.isFruit()){
+			fruit = true;
+		}
 	}
 	public void colorMorphing(){
 		float step=35f;
@@ -93,7 +99,7 @@ public class PsycheLeaf extends Leaf{
 
 		parent.strokeWeight(weight);
 		parent.stroke(rgb.getRed(),rgb.getGreen(),rgb.getBlue());
-		parent.fill(255);
+		//parent.fill(255);
 		//	if(morphColFill){
 		parent.fill(rgb.getRed(),rgb.getGreen(),rgb.getBlue());
 		//}
@@ -110,19 +116,19 @@ public class PsycheLeaf extends Leaf{
 			morphColFill = true; //fill leaf
 		}
 
-		if(nextLeaf.isFruit()){
-			fruit = true;
+		if(k>(2*max/3) && fruit){
+			size = (float)(k/max)*2f;
 			//color pink->red
 			/*parent.stroke((k*6/10000f)*10+190,(k*6/10000f)*10+190,0);
 			parent.fill((k*6/10000f)*10+190,(k*6/10000f)*10+190,0);*/
-			displayFruit(k/max*2f);
+			//displayFruit((float)(k/max)*2f);
 			return false;
 		}
 		else { 
 			if (morph){
 				// Change gradually the stroke weight
 				weight = (float)(1-k/max) *2 + (float)k/max*(0.4f*icolor) ;
-				colorMorphing();
+
 
 				for (int i=0;i<2;i++){
 					vertex[i].x = (float)(1- k/max)*vertex[i].x 
@@ -138,24 +144,27 @@ public class PsycheLeaf extends Leaf{
 	/**************************************
 	 * * DISPLAY
 	 */
-	public void displayFruit(float size){
+	public void displayFruit(){
+		parent.pushStyle();
 		parent.pushMatrix();
 		parent.translate(loc.x,loc.y);
 		parent.fill(255,(int)parent.random(80,150),(int)parent.random(130,190));
+		parent.strokeWeight(icolor*0.4f);
 		parent.stroke(255,(int)parent.random(80,150),(int)parent.random(130,190));
 		parent.ellipse(0,0,size,size);
 		parent.popMatrix();
+		parent.popStyle();
 	}
 
 	public void display() {
 		//parent.noStroke();		
 		//parent.strokeWeight(2);
 
-		this.color();
+
 		//	parent.fill(50,100);
 		if(!morph){
-			parent.strokeWeight(2);
-
+			/*parent.strokeWeight(2);
+			this.color();
 			parent.pushMatrix();
 			parent.translate(loc.x,loc.y);
 			parent.rotate(PConstants.PI/(float)(icolor+1));
@@ -163,16 +172,23 @@ public class PsycheLeaf extends Leaf{
 					vertex[1].x,vertex[1].y,
 					vertex[2].x,vertex[2].y);
 			parent.popMatrix();
-		}
+			 */}
 		else{
-			parent.strokeWeight(weight);
-			parent.pushMatrix();
-			parent.translate(loc.x,loc.y);
-			parent.rotate(PConstants.PI/(float)(icolor+1));
-			parent.rect(vertex[0].x,vertex[0].y,
-					vertex[1].x,vertex[1].y,4);
-			parent.popMatrix();
-
+			if(fruit){
+				if (size != 0)
+					displayFruit();
+			}
+			else{
+				parent.pushStyle();
+				colorMorphing();
+				parent.pushMatrix();
+				parent.translate(loc.x,loc.y);
+				parent.rotate(PConstants.PI/(float)(icolor+1));
+				parent.rect(vertex[0].x,vertex[0].y,
+						vertex[1].x,vertex[1].y);//,4);
+				parent.popMatrix();
+				parent.popStyle();
+			}
 		}
 		//parent.ellipse(loc.x,loc.y,2,2);   
 	}

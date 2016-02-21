@@ -57,19 +57,19 @@ public class FallLeaf extends Leaf{
 
 		// initializes color
 		rgb = new Color(rFall[icolor],gFall[icolor],bFall[icolor]);
-		length = icol/1.5f;
+		length = icol/0.7f;
 
 		// get shape of the leaf
 		vertex = new PVector[]{
-				new PVector(0,0), //0
-				new PVector(1,0), //1
-				new PVector(1/2,-0.35f), //2
+				new PVector(0f,0f), //0
+				new PVector(1f,0f), //1
+				new PVector(1/2f,-0.35f), //2
 
 				new PVector(0.5f,0), //3
 				new PVector(0,-0.5f), //4
-				new PVector(0,1), //5
-				new PVector(-1,-1*0.35f), //6
-				new PVector(1,-1*0.35f), //7
+				new PVector(0,1f), //5
+				new PVector(-1f,-1*0.35f), //6
+				new PVector(1f,-1*0.35f), //7
 				new PVector(-0.35f,0.2f), //8
 				new PVector(0.35f,0.2f) //9
 		};
@@ -93,7 +93,7 @@ public class FallLeaf extends Leaf{
 
 	public void color(){
 		parent.stroke(rgb.getRed(),rgb.getGreen(),rgb.getBlue());
-		//parent.fill(255);
+		parent.fill(rgb.getRed(),rgb.getGreen(),rgb.getBlue());
 	}
 
 
@@ -116,7 +116,14 @@ public class FallLeaf extends Leaf{
 
 	public boolean morphing(float k){
 		k *= growth;
-
+		fall = true;
+		morph = true;
+		
+		if(k>=max*1/6){
+			if( (int)parent.random(0,100) >= 99){
+				noleaf = true;
+			}
+		}
 		/*if(k == 0){				
 			System.out.println("final ");
 			for (int i=0;i<10;i++){
@@ -141,24 +148,7 @@ public class FallLeaf extends Leaf{
 						+ (float)(k)/max*nextLeaf.getVertex(i).x;
 				vertex[i].y = (float)(1- k/max)*vertex[i].y 
 						+ (float)(k)/max*nextLeaf.getVertex(i).y;
-			}/*
-			if(k>=max*3.2/5){
-				parent.stroke((int)parent.random(0,255),
-						(int)parent.random(0,255),
-						(int)parent.random(0,255));
-				fall = false;
 			}
-			else */if(k>=max*1/4){
-				fall = false;
-				if( parent.random(0,k) >= 220){
-					noleaf = true;
-				}
-			}
-			else if(k>max/5){
-				fall = true;
-				morph= true;
-			}
-
 
 		}
 		return false;
@@ -166,8 +156,9 @@ public class FallLeaf extends Leaf{
 
 
 	private void fallAnim(){
-		parent.translate(parent.random(-200,200), fallHeight);
-		fallHeight += parent.random(10,13) + fallHeight/10;
+		float plip = PApplet.sin(fallHeight);
+		parent.translate(fallHeight*plip*plip*plip*parent.random(1,2), fallHeight);
+		fallHeight += parent.random(8,13) + fallHeight/15;
 	}
 
 	/**************************************
@@ -187,8 +178,10 @@ public class FallLeaf extends Leaf{
 		}
 		else{ 
 			if (!morph){
+				angle += (2*PConstants.PI-angle)*PConstants.PI/100;
 
 				parent.pushMatrix();
+				//parent.rotate(PConstants.PI/(float)(icolor+1));
 				parent.rect(loc.x+length/2,loc.y,length,length);
 				parent.translate(loc.x-length/2,loc.y);
 				parent.rotate(angle);
