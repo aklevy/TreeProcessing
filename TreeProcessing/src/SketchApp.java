@@ -14,30 +14,34 @@ public class SketchApp extends PApplet{
 	boolean grow = false;
 	int width = 840;
 	int height = 600;
+	
+	
 	float time;
 	float kFrame = 0;
-	Color bgColor;
+	
+	float maxFrames = 600f;
+	
 	//GUI
 	GCustomSlider slider;
-	//Leaf l;
+	
+	// Background Colors
+	int bgColor;
 	public int [] r = {157,255,196,116};
 	public int [] g = {255,96,126,166};
 	public int [] b = {108,57,80,188};
+	
 	int season = 2;
 	
 	public void setup(){
-		//	size(840,600);
-		bgColor = new Color(255);
-		background(bgColor.getRGB());
+		//size(840,600);
+		bgColor = color(255);
+		background(bgColor);
 
-		frameRate(30);
+		frameRate(60);
 		tree = new ArrayList<Branch>();
 		leaves = new ArrayList<Leaf>();
-		/*l = new SummerLeaf(this,new PVector(width/2,height/2),(int)random(0,6),2); //leaf
-		l.changeSeason();
-		System.out.println(l.toString());
-		System.out.println(l.nextL().toString());
-		 */time = System.nanoTime() * pow(10,-9) ;
+	
+		time = System.nanoTime() * pow(10,-9) ;
 		 G4P.registerSketch(this);
 
 		 slider = new GCustomSlider(this, 20, 20, 260, 50, null);
@@ -50,102 +54,50 @@ public class SketchApp extends PApplet{
 	public void settings() {
 		size(840, 600);
 
-	}/*
-	public void season(int kFrame){
-
-
-		// Changes season 
-		//	if((System.nanoTime() * pow(10,-9)-time)>=5 ){ 
-		//leaves.clear();
-
-		if(!morphed){
-			for (int i = tree.size()-1; i > 512; i--) {
-				Branch b = tree.get(i);
-				for (Leaf leaf : leaves) {
-					morphed = leaf.morphing(kFrame);
-				}
-			}
-		}
-
-
-		// Resets timer
-		//time = System.nanoTime() * pow(10,-9);
-
-	}*/
+	}
+	
 	public void mouseClicked(MouseEvent event){
-		background(bgColor.getRGB());
-
-		//Leaf newleaf = new SpringLeaf(this,b.end,(int)random(0,6)); 
-
-
+		background(bgColor);
 
 		// Removes previous tree
 		tree.clear();
 		leaves.clear();
+		
 		// Add new tree to the mouse position
 		Branch b = new Branch(this,new PVector(event.getX(),event.getY()),new PVector(0,-2.5f),60,true);
 		tree.add(b);
 
 	}
-	/*public void keyPressed(){
-		leaves.clear();
-		Leaf newleaf;
-		for (int i = tree.size()-1; i >= 1024/2; i--) {
-			Branch b = tree.get(i);
-
-			if(key == 'a'){ //spring
-				newleaf = new SpringLeaf(this,b.end,(int)random(0,6)); 
-			}
-			else if(key == 'z'){ //summer
-				newleaf = new SummerLeaf(this,b.end,(int)random(0,6),(int)random(0,10)%2); 
-			}
-			else if(key == 'e'){ //fall
-				newleaf = new FallLeaf(this,b.end,(int)random(0,6),random(0,2*PI)); 
-			}
-			else if(key == 'r'){ //christmas decoration
-				newleaf = new PsycheLeaf(this,b.end,(int)random(0,6)); 
-			}
-			else{
-				newleaf = new SummerLeaf(this,b.end,(int)random(0,6),(int)random(0,10)%2); 
-			}
-			leaves.add(newleaf);
-
-		}
-		if(key == 't'){ //Winter
-			leaves.clear();
-		}
-	}*/
+	
 
 	public void draw(){
 		
 		// background color gradient
 		float step=300f;
-		Color rgb_end = new Color(r[season],g[season],b[season]);
+		int rgb_end = color(r[season],g[season],b[season]);
 		float hsb_start[] = new float[3];
 		float hsb_end[] = new float[3];
 
-		Color.RGBtoHSB(bgColor.getRed(),bgColor.getGreen(),bgColor.getBlue(),hsb_start);
+		Color.RGBtoHSB((int) red(bgColor), (int) green(bgColor), (int) blue(bgColor), hsb_start);
 		//	System.out.println(nextLeaf.toString());
-		Color.RGBtoHSB(rgb_end.getRed(),rgb_end.getGreen(),rgb_end.getBlue(),hsb_end);
+		Color.RGBtoHSB((int) red(rgb_end), (int) green(rgb_end), (int) blue(rgb_end), hsb_end);
 
 		// Change the hue to make a color gradient
 		hsb_start[0] += (hsb_end[0]-hsb_start[0])/step;
 		hsb_start[1] += (hsb_end[1]-hsb_start[1])/step;
 		hsb_start[2] += (hsb_end[2]-hsb_start[2])/step;
 
-		bgColor = new Color(Color.HSBtoRGB(hsb_start[0],hsb_start[1],hsb_start[2]));
-		background(bgColor.getRGB());
+		bgColor = color(Color.HSBtoRGB(hsb_start[0],hsb_start[1],hsb_start[2]));
+		background(bgColor);
 
-		/*	l.display();
-		l.morphing(kFrame);
-		kFrame++;
-		if(kFrame > 300){
-			l = l.nextL();
-			l.changeSeason();
-			kFrame = 0;
-		}*/
-
-
+		// Display FPS
+		
+		pushStyle();
+		fill(0);
+		text(frameRate+"FPS",10,100);
+		popStyle();
+		
+		// Generate tree
 		for (int i = tree.size()-1; i >= 0; i--) {
 			// Get the branch, update and draw it
 			Branch b = tree.get(i);
@@ -177,8 +129,7 @@ public class SketchApp extends PApplet{
 						newleaf = new SpringLeaf(this,b.end,(int)random(0,6)); 
 							break;		
 					}
-					//Leaf newleaf = new FallLeaf(this,b.end,(int)random(0,6),random(0,2*PI)); 
-					//Leaf newleaf = new SummerLeaf(this,b.end,(int)random(0,6),(int)random(0,2),(float)random(0,2*PConstants.PI)); 
+				
 					newleaf.changeSeason();
 
 					leaves.add(newleaf);//new Leaf(this,b.end));
@@ -205,7 +156,7 @@ public class SketchApp extends PApplet{
 		}
 
 		// End of morphing, replacing by new leaves
-		if(kFrame > 300){
+		if(kFrame > maxFrames){
 			for (int i = 0;i<leaves.size();i++){
 				Leaf leafAdd = leaves.get(i).nextL();
 				leafAdd.changeSeason();
